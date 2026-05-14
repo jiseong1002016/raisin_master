@@ -29,7 +29,31 @@ cd ..
 
 Replace `{seed name}` with the package or robot seed name you want to create.
 
-## 3. Install Compatible Release Packages
+## 3. Configure RAISIN
+
+Create the local configuration file from the example:
+
+```bash
+cp configuration_setting_example.yaml configuration_setting.yaml
+```
+
+Then update the required fields in `configuration_setting.yaml`:
+
+```yaml
+# Select which package release channel RAISIN should use.
+# - "user": stable release packages.
+# - "devel": latest pre-release packages under development.
+user_type: "devel"
+
+# GitHub tokens used by raisin.py when it needs GitHub release access.
+# Replace the placeholder with your own token if GitHub fallback or publishing is required.
+gh_tokens:
+  "raionrobotics": "ghp_your_token"
+```
+
+Keep personal access tokens local and do not commit them to the repository.
+
+## 4. Install Compatible Release Packages
 
 For the current RAIPAL source packages, install the compatible release package set from GitHub releases:
 
@@ -54,7 +78,7 @@ Check the local package versions after install:
 raisin index local
 ```
 
-## 4. Generate the RAIPAL URDF
+## 5. Generate the RAIPAL URDF
 
 Generate the URDF resources from the RAIPAL source package:
 
@@ -62,7 +86,7 @@ Generate the URDF resources from the RAIPAL source package:
 python3 ./src/raisin_raipal/resource/raipal_urdf/scripts/urdf-writer.py
 ```
 
-## 5. Build
+## 6. Build
 
 Build the release configuration:
 
