@@ -49,9 +49,6 @@ cmake-*/*
 generated/*
 build/*
 install/*
-src/*
-!src/raisin_raipal/raisin_d405_plugin/src/d405_plugin.cpp
-!src/raipal_controller/raisin_raipal_grasp_controller/scripts/run_example.py
 log/*
 git_pull.sh
 
@@ -94,3 +91,6 @@ vcpkg_installed/*
 .omc
 # Locally built SDK distributions (not OTA packages)
 /sdk/
+!src/raisin_raipal/raisin_d405_plugin/src/d405_plugin.cpp
+!src/raipal_controller/raisin_raipal_grasp_controller/scripts/run_example.py
+src/*
