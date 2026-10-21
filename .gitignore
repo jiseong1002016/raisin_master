@@ -82,3 +82,5 @@ vcpkg_installed/*
 .worktrees/
 
 /runtime/
+/homing_ee_*.conf
+/homing_ee_*.conf.tmp
