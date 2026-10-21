@@ -96,3 +96,5 @@ src/*
 
 # Deployed runtime binaries; sources remain in package repositories.
 /runtime/
+/homing_ee_*.conf
+/homing_ee_*.conf.tmp
