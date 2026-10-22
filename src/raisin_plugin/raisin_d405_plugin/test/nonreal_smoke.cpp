@@ -63,6 +63,7 @@ int main(int argc, char** argv) {
   auto destroy = reinterpret_cast<plugin::destroy_t*>(::dlsym(library, "destroy"));
   auto* camera = create(hub, hub_server, sim, sim_server, resources, "test", "d405", false);
   resources.paramRoot["raisin_d405_plugin"]("topic_prefix") = prefix;
+  resources.paramRoot["raisin_d405_plugin"]("simulation_source") = std::string("plane");
   bool passed = camera->init();
   for (int i = 0; i < 200 && passed && !(raw && snapshot && compressed && client->isServiceAvailable()); ++i) {
     passed = camera->advance(); std::this_thread::sleep_for(25ms);

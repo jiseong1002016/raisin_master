@@ -1,0 +1,93 @@
+{
+  "source_lock": "../config/raipal_sources.lock.json",
+  "date": "2026-10-23",
+  "scope": "hardware-free source preparation; no real episode or long training",
+  "python": {
+    "executable": "/home/jiseong/anaconda3/bin/python",
+    "controller_checks": [
+      "real_launch_check.py",
+      "episode_trigger_command_check.py",
+      "rgbd_anygrasp_check.py",
+      "initialization_handoff_check.py",
+      "ee_coordinates_check.py",
+      "simulation_devices_check.py",
+      "pd_target_lead_check.py",
+      "controller_plugin_config_check.py",
+      "arm_model_compatibility_check.py",
+      "pose_generator_switch_check.py",
+      "episode_budget_check.py"
+    ],
+    "command_template": "<python> src/raipal_controller/raisin_raipal_grasp_controller/test/<check>",
+    "controller_result": "11 check programs passed",
+    "scene_command": "<python> -m unittest discover -s tests -p test_deployment_scene.py (cwd grasp_iteration)",
+    "scene_result": "4 tests passed",
+    "anygrasp_scope": "SDK boundary/inference outputs are injected test doubles; no trained SDK inference succeeded"
+  },
+  "grasp_cpp": {
+    "status": "passed",
+    "sdk": "RaiSim 2.9.4",
+    "build_dir": "/home/jiseong/raisim_ws/isolation/episode_preparation_20261023/build",
+    "configure_source": "../source/CMakeLists.txt (isolated imported-framework wrapper)",
+    "targets": [
+      "raisin_raipal_grasp_controller",
+      "raisin_grasp_b0",
+      "raipal_grasp_start_episode",
+      "raipal_episode_start_gate_check",
+      "raipal_start_trajectory_check"
+    ],
+    "command": "cmake --build <build_dir> --target <targets> -j1; ctest --test-dir <build_dir>/grasp --output-on-failure",
+    "ctest_result": "2/2 passed"
+  },
+  "camera_cpp": {
+    "status": "full plugin compile/link passed",
+    "host": "railab",
+    "build_dir": "/home/raipal/workspace/jiseong/isolation/rgbd_episode_prepare_20261023/build",
+    "command": "cmake --build <build_dir> --target raisin_d405_plugin -j1",
+    "framework_prefix": "/home/raipal/raisin_master/install (read-only SDK dependencies)",
+    "sdk_scope": "existing installed SDK, not a full 2.9.4 framework rebuild",
+    "native_render_check": {
+      "sdk": "RaiSim/rayrai 2.9.4",
+      "test": "src/raisin_plugin/raisin_d405_plugin/test/rayrai_rgbd_check.cpp",
+      "expected_front_depth_m": 0.2,
+      "actual_front_depth_m": 0.2,
+      "actual_center_rgb_u8": [
+        102,
+        0,
+        0
+      ],
+      "status": "passed"
+    }
+  },
+  "tactile_cpp": {
+    "status": "sensor/plugin/USB process/GUI built, 5/5 hardware-free tests passed",
+    "evidence_dir": "/home/jiseong/raisim_ws/isolation/episode_preparation_20261023_tactile/evidence",
+    "logs": [
+      "configure.log",
+      "build.log",
+      "ctest_hardware_free.log",
+      "generated_message_check.json",
+      "source_sha256.json"
+    ],
+    "tests": [
+      "tactile_contract",
+      "tactile_usb_protocol",
+      "tactile_usb_backend",
+      "tactile_v2_pipeline",
+      "tactile_shadow"
+    ],
+    "generated_message_fields_match": 18,
+    "sdk_scope": "existing railab SDK advertises RaiSim 1.1.8; does not qualify full 2.9.4 workspace ABI"
+  },
+  "independent_review": {
+    "blocking_integration_findings": 0,
+    "scope": "read-only A1/B1, camera freshness, initializing ACK, coordinate swap, 7/14 DOF",
+    "handoff_read": "all original 200 lines read cold; commissioning pointers, complete examples, staging-pregrasp distinction and this manifest added after feedback"
+  },
+  "remaining_qualification": {
+    "table_078": "native reset IK/contact rejected current default footprint/ready; no deployment receipt",
+    "camera_mount": "file transforms composed; calibration_verified=false",
+    "anygrasp_warmup": "failed: ImportError libcrypto.so.1.1 missing; railab SDK not installed",
+    "hardware": "EE homing, two tactile pad identities/baselines and real grasp success not tested",
+    "deployment": "running installation unchanged; full ABI-matched build/deployment remains commissioning work"
+  }
+}

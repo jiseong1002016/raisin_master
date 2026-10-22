@@ -11,15 +11,16 @@ width: 640
 height: 480
 fps: 30
 roi_depth_xywh: [288, 208, 64, 64]
-# Source-scene translation registration needs the full object silhouette;
-# its example overrides this ROI. Grasp snapshots include <=1200 depth points.
+# Select the object's visible region. RGBD snapshots contain <=12000 paired XYZ/RGB samples.
 min_depth_m: 0.07
 max_depth_m: 0.5
 min_valid_pixels: 25
 # Standard Raisin camera GUI transport; created only when a viewer subscribes.
 publish_compressed: true
-# NONREAL only: world uses current RaiSim collision geometry; plane is the transport fixture.
-simulation_source: plane
+# NONREAL: rayrai renders aligned RGBD. plane/world are explicit depth-only test fixtures.
+simulation_source: rayrai
 simulation_ee_frame: L_ee
+# Launcher supplies its exact URDF/mount/locked-joint composition to both backends.
+simulation_camera_to_ee_json: ""
 # 40 x 30 rays expanded to 640 x 480. Encoding runs outside the simulation mutex.
 simulation_ray_stride: 16

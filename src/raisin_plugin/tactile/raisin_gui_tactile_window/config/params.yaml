@@ -1,0 +1,10 @@
+topic_prefix: tactile/v2
+command_suffix: command
+open_when_start: false
+only_single_instance_allowed: true
+menu_tab: tools
+# Use the same run root as raisin_tactile_plugin.usb.record_dir.
+record_root: ""
+display_max_n_estimate: 0.5
+stale_timeout_ms: 150.0
+max_skew_ms: 50.0

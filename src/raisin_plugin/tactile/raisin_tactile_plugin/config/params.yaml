@@ -1,0 +1,38 @@
+# Staged prototype. Enabling requires calibrated geometry and an explicit backend.
+thread_group: plugin
+allow_multiple_instances: false
+is_loadable: true
+is_unloadable: true
+rate: 100
+enabled: false
+backend: sim
+topic_prefix: tactile/v1
+usb:
+  port: ""
+  # Independent USB boards: leave port empty and set both stable by-id paths.
+  left_port: ""
+  right_port: ""
+  # Set to 2 when the shared stream supplies one complete map per pad.
+  # The map order is right first, then left; 1 routes every map to the right pad.
+  stream_sensor_count: 1
+  record_dir: ""
+  topic_prefix: tactile/v2
+  rate_hz: 30
+  baud_rate: 115200
+  frame_timeout_s: 0.5
+  retry_s: 1.0
+  poll_rate_hz: 100.0
+force_conversion:
+  # TODO: Replace after measured code-to-force calibration on each physical sensor.
+  # Provisional display/log estimate only: 1000 code delta -> 1 N_estimate.
+  code_to_force_n_per_code: 0.001
+  calibration_id: provisional_linear_0p001
+  left_polarity: 1
+  right_polarity: 1
+bilateral:
+  stale_timeout_s: 0.15
+  max_skew_s: 0.05
+shadow:
+  # Non-actuating 100 Hz consumer of the core-owned left/right Receivers.
+  enabled: false
+sensors: {}

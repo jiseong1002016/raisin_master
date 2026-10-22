@@ -1,4 +1,4 @@
-// Understood as: reuse native Raisin camera messages for D405 and label all NONREAL frames synthetic.
+// Both acquisition backends publish the same aligned RGBD grasp input.
 #include "raisin_plugin/plugin.hpp"
 #include "raisin_network/node.hpp"
 #include "raisin_util/raisin_directories.hpp"
@@ -21,6 +21,7 @@
 #include <mutex>
 #include <thread>
 #include <time.h>
+#include "rayrai_rgbd.hpp"
 
 namespace raisin::plugin {
 namespace {
@@ -58,10 +59,10 @@ class D405Plugin final : public Plugin, public Node {
       minimum_ = param_->as_int("min_valid_pixels");
       compressed_ = param_->as_bool("publish_compressed");
       if (!isRealRobot_) {
-        simulation_source_ = std::string((*param_)("simulation_source", std::string("plane")));
-        if (simulation_source_ != "plane" && simulation_source_ != "world")
-          throw std::invalid_argument("simulation_source must be plane or world");
-        if (simulation_source_ == "world") initializeWorldCamera();
+        simulation_source_ = std::string((*param_)("simulation_source", std::string("rayrai")));
+        if (simulation_source_ != "plane" && simulation_source_ != "world" && simulation_source_ != "rayrai")
+          throw std::invalid_argument("simulation_source must be rayrai, plane or world");
+        if (simulation_source_ != "plane") initializeWorldCamera();
       }
       if (prefix_.empty() || frame_.empty() || width_ <= 0 || height_ <= 0 || fps_ <= 0 || fps_ > 90
           || roi_.size() != 4 || roi_[0] < 0 || roi_[1] < 0 || roi_[2] <= 0 || roi_[3] <= 0
@@ -70,6 +71,7 @@ class D405Plugin final : public Plugin, public Node {
           || minimum_ <= 0 || minimum_ > roi_[2] * roi_[3])
         throw std::invalid_argument("invalid D405 stream/ROI configuration");
       depth_ = createPublisher<Image>(prefix_ + "/depth", 2);
+      rgb_pub_ = createPublisher<Image>(prefix_ + "/rgb", 2);
       info_pub_ = createPublisher<Info>(prefix_ + "/depth/camera_info", 2);
       snapshot_ = createPublisher<std_msgs::msg::String>(prefix_ + "/grasp_input", 2);
       status_ = createPublisher<std_msgs::msg::String>(prefix_ + "/status", 2);
@@ -122,6 +124,26 @@ class D405Plugin final : public Plugin, public Node {
                     Eigen::AngleAxisd(rpy[0], Eigen::Vector3d::UnitX())).toRotationMatrix();
     camera_in_ee_ = Eigen::Vector3d(xyz[0], xyz[1], xyz[2]) + ee_from_base * camera_in_base;
     ee_from_camera_ = ee_from_base * base_from_camera;
+    const std::string extrinsic = (*param_)("simulation_camera_to_ee_json", std::string{});
+    if (!extrinsic.empty()) {
+      const auto transform = Json::parse(extrinsic);
+      if (!transform.is_array() || transform.size() != 4)
+        throw std::invalid_argument("simulation_camera_to_ee_json requires a 4x4 rigid transform");
+      for (int row = 0; row < 4; ++row) {
+        if (!transform[row].is_array() || transform[row].size() != 4)
+          throw std::invalid_argument("simulation_camera_to_ee_json requires four columns");
+        for (int col = 0; col < 4; ++col) {
+          const double value = transform[row][col];
+          if (!std::isfinite(value) || (row == 3 && std::abs(value - (col == 3 ? 1. : 0.)) > 1e-8))
+            throw std::invalid_argument("simulation_camera_to_ee_json is not a finite rigid transform");
+          if (row < 3 && col < 3) ee_from_camera_(row, col) = value;
+          if (row < 3 && col == 3) camera_in_ee_[row] = value;
+        }
+      }
+      if (!(ee_from_camera_.transpose() * ee_from_camera_).isApprox(Eigen::Matrix3d::Identity(), 1e-6)
+          || std::abs(ee_from_camera_.determinant() - 1.) > 1e-6)
+        throw std::invalid_argument("simulation_camera_to_ee_json rotation must be right-handed/orthonormal");
+    }
     // Body names/indices are immutable for this robot. Controller dependency
     // loading holds its manager mutex while the control loop owns worldSim_.
     // Locking the world here would reverse that order and deadlock the load.
@@ -171,8 +193,10 @@ class D405Plugin final : public Plugin, public Node {
     }
   }
 
-  void publish(const std::vector<float>& meters, const rs2_intrinsics& intrinsics) {
-    const auto stamp = monotonicNs();
+  void publish(const std::vector<float>& meters, const rs2_intrinsics& intrinsics,
+               const std::vector<std::uint8_t>& rgb = {}, std::uint64_t stamp = 0) {
+    if (!stamp) stamp = monotonicNs();
+    const bool rgbd = rgb.size() == meters.size() * 3;
     Image image{};
     image.header.frame_id = frame_;
     image.header.stamp.sec = stamp / 1000000000ULL;
@@ -190,6 +214,12 @@ class D405Plugin final : public Plugin, public Node {
     info.p = {intrinsics.fx, 0., intrinsics.ppx, 0., 0., intrinsics.fy, intrinsics.ppy, 0., 0., 0., 1., 0.};
     { std::lock_guard lock(info_mutex_); info_ = info; }
     depth_->publish(image); info_pub_->publish(info);
+    if (rgbd) {
+      Image color{}; color.header = image.header;
+      color.width = width_; color.height = height_; color.step = width_ * 3;
+      color.encoding = "rgb8"; color.is_bigendian = false; color.data = rgb;
+      rgb_pub_->publish(color);
+    }
     std::vector<float> valid;
     for (int y = roi_[1]; y < roi_[1] + roi_[3]; ++y)
       for (int x = roi_[0]; x < roi_[0] + roi_[2]; ++x) {
@@ -197,11 +227,12 @@ class D405Plugin final : public Plugin, public Node {
         if (std::isfinite(z) && z >= near_ && z <= far_) valid.push_back(z);
       }
     // Bound the grasp snapshot independently of stream/ROI resolution.
-    Json points = Json::array();
+    Json points = Json::array(), colors = Json::array();
+    const std::size_t point_limit = rgbd ? 12000 : 1200;
     const int sample_stride = std::max(1, int(std::ceil(std::sqrt(
-      double(roi_[2]) * roi_[3] / 1000.))));
-    for (int y = roi_[1]; y < roi_[1] + roi_[3] && points.size() < 1200; y += sample_stride)
-      for (int x = roi_[0]; x < roi_[0] + roi_[2] && points.size() < 1200; x += sample_stride) {
+      double(roi_[2]) * roi_[3] / (rgbd ? 12000. : 1000.)))));
+    for (int y = roi_[1]; y < roi_[1] + roi_[3] && points.size() < point_limit; y += sample_stride)
+      for (int x = roi_[0]; x < roi_[0] + roi_[2] && points.size() < point_limit; x += sample_stride) {
         // A block-expanded pixel carries a neighbour's depth, and deprojecting
         // it at its own pixel centre places the point off the surface it
         // belongs to.  Report the block's sampled pixel instead.
@@ -218,6 +249,10 @@ class D405Plugin final : public Plugin, public Node {
           sample_y + (world_depth ? .5F * (std::min(ray_stride_, height_ - sample_y) - 1) : 0.F)};
         float xyz[3]; rs2_deproject_pixel_to_point(xyz, &intrinsics, pixel, z);
         points.push_back({xyz[0], xyz[1], xyz[2]});
+        if (rgbd) {
+          const auto offset = size_t(sample_y * width_ + sample_x) * 3;
+          colors.push_back({rgb[offset], rgb[offset + 1], rgb[offset + 2]});
+        }
       }
     Json point = nullptr, median = nullptr;
     if (valid.size() >= static_cast<std::size_t>(minimum_)) {
@@ -229,7 +264,8 @@ class D405Plugin final : public Plugin, public Node {
       point = {xyz[0], xyz[1], xyz[2]};
     }
     std_msgs::msg::String message;
-    message.data = Json{{"schema", "raisin_d405_grasp_input_v1"}, {"valid", !point.is_null()},
+    message.data = Json{{"schema", rgbd ? "raisin_d405_grasp_input_v2" : "raisin_d405_grasp_input_v1"}, {"valid", !point.is_null()},
+      {"acquisition_source", isRealRobot_ ? "d405" : simulation_source_}, {"colors_rgb_u8", colors},
       {"is_simulation", !isRealRobot_}, {"point_camera_m", point}, {"depth_median_m", median},
       {"points_camera_m", points}, {"points_pixel_stride", sample_stride},
       {"simulation_source", isRealRobot_ ? Json(nullptr) : Json(simulation_source_)},
@@ -252,7 +288,7 @@ class D405Plugin final : public Plugin, public Node {
   void run() {
     try {
       if (!isRealRobot_) {
-        serial_ = simulation_source_ == "world" ? "simulation_world" : "simulation";
+        serial_ = "simulation_" + simulation_source_;
         rs2_intrinsics intr{}; intr.width = width_; intr.height = height_;
         intr.fx = intr.fy = 400.F; intr.ppx = .5F * (width_ - 1); intr.ppy = .5F * (height_ - 1);
         intr.model = RS2_DISTORTION_NONE;
@@ -261,10 +297,26 @@ class D405Plugin final : public Plugin, public Node {
           for (int x = roi_[0]; x < roi_[0] + roi_[2]; ++x) depth[y * width_ + x] = .22F;
         auto next = std::chrono::steady_clock::now();
         const auto period = std::chrono::nanoseconds(1000000000ULL / fps_);
+        std::unique_ptr<RayraiRgbd> renderer;
+        std::vector<std::uint8_t> rgb;
+        if (simulation_source_ == "rayrai")
+          renderer = std::make_unique<RayraiRgbd>(worldSim_, width_, height_, intr.fx, near_, far_);
         while (running_) {
+          std::uint64_t stamp = 0;
           if (simulation_source_ == "world") captureWorldDepth(depth, intr);
+          if (renderer) {
+            {
+              std::lock_guard lock(worldSim_);
+              raisim::Vec<3> position; raisim::Mat<3, 3> rotation;
+              robotSim_->getPosition(ee_body_index_, position);
+              robotSim_->getOrientation(ee_body_index_, rotation);
+              stamp = monotonicNs();
+              renderer->render(position.e() + rotation.e() * camera_in_ee_, rotation.e() * ee_from_camera_);
+            }
+            renderer->read(depth, rgb);
+          }
           if (!running_) break;
-          publish(depth, intr);
+          publish(depth, intr, rgb, stamp);
           next = std::max(next + period, std::chrono::steady_clock::now());
           std::this_thread::sleep_until(next);
         }
@@ -281,8 +333,10 @@ class D405Plugin final : public Plugin, public Node {
       serial_ = matches[0];
       rs2::pipeline pipeline(context); rs2::config config;
       config.enable_device(serial_); config.enable_stream(RS2_STREAM_DEPTH, width_, height_, RS2_FORMAT_Z16, fps_);
+      config.enable_stream(RS2_STREAM_COLOR, width_, height_, RS2_FORMAT_RGB8, fps_);
       pipeline.start(config);
       try {
+        rs2::align align_to_depth(RS2_STREAM_DEPTH);
         auto last = std::chrono::steady_clock::now();
         while (running_) {
           rs2::frameset frames;
@@ -291,16 +345,25 @@ class D405Plugin final : public Plugin, public Node {
             continue;
           }
           last = std::chrono::steady_clock::now();
+          const auto stamp = monotonicNs();
+          frames = align_to_depth.process(frames);
           auto depth = frames.get_depth_frame();
+          auto color = frames.get_color_frame();
+          if (!depth || !color || color.get_width() != width_ || color.get_height() != height_)
+            throw std::runtime_error("D405 did not provide depth-aligned RGBD");
           const auto intr = depth.get_profile().as<rs2::video_stream_profile>().get_intrinsics();
           const float units = depth.get_units();
           std::vector<float> meters(width_ * height_);
+          std::vector<std::uint8_t> rgb(size_t(width_) * height_ * 3);
           for (int y = 0; y < height_; ++y) {
             const auto* row = reinterpret_cast<const std::uint16_t*>(
                 static_cast<const std::uint8_t*>(depth.get_data()) + y * depth.get_stride_in_bytes());
             for (int x = 0; x < width_; ++x) meters[y * width_ + x] = row[x] * units;
+            std::memcpy(rgb.data() + size_t(y) * width_ * 3,
+                        static_cast<const std::uint8_t*>(color.get_data()) + y * color.get_stride_in_bytes(),
+                        size_t(width_) * 3);
           }
-          publish(meters, intr);
+          publish(meters, intr, rgb, stamp);
         }
       } catch (...) { pipeline.stop(); throw; }
       pipeline.stop();
@@ -312,13 +375,13 @@ class D405Plugin final : public Plugin, public Node {
   std::atomic<bool> running_{false}, failed_{false};
   std::thread capture_; std::mutex info_mutex_; Info info_{};
   std::string prefix_, frame_, serial_; std::vector<int> roi_;
-  std::string simulation_source_{"plane"};
+  std::string simulation_source_{"rayrai"};
   int ray_stride_{16}; std::size_t ee_body_index_{};
   Eigen::Vector3d camera_in_ee_ = Eigen::Vector3d::Zero();
   Eigen::Matrix3d ee_from_camera_ = Eigen::Matrix3d::Identity();
   int width_{}, height_{}, fps_{}, minimum_{}; double near_{}, far_{}; bool compressed_{};
   std::uint64_t sequence_{}; std::unique_ptr<Av1Encoder> encoder_;
-  std::shared_ptr<Publisher<Image>> depth_; std::shared_ptr<Publisher<Info>> info_pub_;
+  std::shared_ptr<Publisher<Image>> depth_, rgb_pub_; std::shared_ptr<Publisher<Info>> info_pub_;
   std::shared_ptr<Publisher<std_msgs::msg::String>> snapshot_, status_;
   std::shared_ptr<Publisher<Packet>> compressed_pub_; std::shared_ptr<Service<InfoService>> info_service_;
 };

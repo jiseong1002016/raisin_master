@@ -1,0 +1,298 @@
+{
+  "schema": "raipal_episode_source_pins_v1",
+  "date": "2026-10-23",
+  "root_repository": {
+    "fetch_url": "https://github.com/jiseong1002016/raisin_master.git",
+    "upstream_url": "https://github.com/raionrobotics/raisin_master.git",
+    "ref": "feat/grasp-episode-preparation-20261023",
+    "revision": "the commit containing this lock file",
+    "fallback_reason": "upstream readable, account has no push permission"
+  },
+  "root_owned_packages": [
+    "src/raisin_plugin/ee",
+    "src/raisin_plugin/raisin_d405_plugin",
+    "src/raisin_plugin/tactile"
+  ],
+  "workspace_roots": {
+    "local": {
+      "raisin_master": "/home/jiseong/raisin_master",
+      "grasp_iteration": "/home/jiseong/raisim_ws/grasp_iteration"
+    },
+    "railab": {
+      "raisin_master": "/home/raipal/workspace/jiseong/raisin_master_sources/raisin_master",
+      "package_mirrors": "/home/raipal/workspace/jiseong/raisin_master_sources",
+      "grasp_iteration": "/home/raipal/workspace/jiseong/grasp_iteration"
+    }
+  },
+  "packages": [
+    {
+      "path": "src/raisin_raipal",
+      "fetch_url": "https://github.com/railabatkaist/raisin_raipal.git",
+      "revision": "d2302b56f6a6fce322244b34ea30fb677b5db99e",
+      "ref": "feat/grasp-episode-preparation-20261023"
+    },
+    {
+      "path": "src/raipal_controller",
+      "fetch_url": "https://github.com/jiseong1002016/raipal_controller.git",
+      "revision": "98d48619c43145db8ecb4605eb13f178d57327dc",
+      "ref": "feat/grasp-episode-preparation-20261023",
+      "upstream_url": "https://github.com/railabatkaist/raipal_controller.git",
+      "fallback_reason": "upstream readable, account has no push permission"
+    },
+    {
+      "path": "src/raisin_third_party_raipal",
+      "fetch_url": "https://github.com/jiseong1002016/raisin_third_party_raipal.git",
+      "revision": "e3ccde1b008ea68b8fc84696ee60085afc64b937",
+      "ref": "feat/grasp-episode-preparation-20261023",
+      "upstream_url": "https://github.com/railabatkaist/raisin_third_party_raipal.git",
+      "fallback_reason": "upstream readable, account has no push permission"
+    },
+    {
+      "path": "src/raisin_third_party_raipal/raisimRaipal",
+      "fetch_url": "https://github.com/jiseong1002016/raisimRaipal.git",
+      "revision": "a2bd89bb2a08a2d79d2b934cf32c4e731c094536",
+      "ref": "feat/grasp-episode-preparation-20261023",
+      "submodule": true,
+      "upstream_url": "https://github.com/railabatkaist/raisimRaipal.git",
+      "fallback_reason": "upstream readable, package-config fix requires publishing to writable fork"
+    },
+    {
+      "path": "src/raisin_third_party_raipal/raipal_kinematics",
+      "fetch_url": "https://github.com/railabatkaist/raipal_kinematics.git",
+      "revision": "c52e362acd8599b40f959bbfb49e9ec22a7375e9",
+      "ref": "main",
+      "submodule": true
+    },
+    {
+      "path": "src/raisin_raipal/resource/urdf_head",
+      "fetch_url": "https://github.com/railabatkaist/HEAD-URDF.git",
+      "revision": "7b96dbabb48c52021c6f57aa12d6dfbc0ef98629",
+      "ref": "main",
+      "submodule": true
+    },
+    {
+      "path": "src/raisin_raipal/resource/urdf_raipal",
+      "fetch_url": "https://github.com/jiseong1002016/RAIPAL-URDF.git",
+      "revision": "4b313b7e81733dab29cf1855ec93f26c6a8f10a3",
+      "ref": "main",
+      "submodule": true,
+      "also_used_by": "grasp_iteration:rsc/RAIPAL-URDF",
+      "upstream_url": "https://github.com/railabatkaist/RAIPAL-URDF.git",
+      "fallback_reason": "current L/EE model revision differs from upstream main; preserve reproducible model"
+    },
+    {
+      "path": "src/_raisin_raipal_seed",
+      "fetch_url": "https://github.com/railabatkaist/raisin_raipal_seed.git",
+      "revision": "36db1f804210030704dc4cc852329a6023902d32",
+      "ref": "main"
+    },
+    {
+      "path": "src/raisin_gui",
+      "fetch_url": "https://github.com/jiseong1002016/raisin_gui.git",
+      "revision": "ecc7db3bc348d412c4b59c30072efd7a173dc1fc",
+      "ref": "feat/axis_homing",
+      "upstream_url": "https://github.com/raionrobotics/raisin_gui.git",
+      "fallback_reason": "upstream fetch returned Repository not found; personal fetch succeeded"
+    },
+    {
+      "path": "grasp_iteration",
+      "fetch_url": "https://github.com/jiseong1002016/grasp_iteration.git",
+      "revision": "26761af6c756894fa776b7715fc9bb773042f4c3",
+      "ref": "feat/grasp-episode-preparation-20261023"
+    }
+  ],
+  "legacy_railab_observation": {
+    "read_only": true,
+    "note": "Existing live checkout/binaries were not modified; these are observations, not deployment pins. Full framework rebuild needs its SDK dependencies separately.",
+    "repositories": [
+      {
+        "path": "/home/raipal/raisin_master",
+        "revision": "9f0823f74afe17de599babacc528f2f72153c7b4",
+        "branch": "ee_hook",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/raionrobotics/raisin_master.git"
+          },
+          {
+            "name": "task-private",
+            "url": "https://github.com/jiseong1002016/raisin_master.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin",
+        "revision": "acf94715c267523e1c5f0f38305aa191ae294488",
+        "branch": "main",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/raionrobotics/raisin.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/_raisin_raipal_seed",
+        "revision": "eb60765ac4966d069567f47b5e553b9919ab66b0",
+        "branch": "railab-dongdrive-20261003",
+        "dirty": false,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/raisin_raipal_seed.git"
+          },
+          {
+            "name": "upstream",
+            "url": "https://github.com/iamchoking/_raisin_seed.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_gui",
+        "revision": "ecc7db3bc348d412c4b59c30072efd7a173dc1fc",
+        "branch": "feat/axis_homing",
+        "dirty": false,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/raionrobotics/raisin_gui.git"
+          },
+          {
+            "name": "task-private",
+            "url": "https://github.com/jiseong1002016/raisin_gui.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_robot_packages",
+        "revision": "ac1d14637830555fa09f2961d4f9b540c331e393",
+        "branch": "main",
+        "dirty": false,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/raionrobotics/raisin_robot_packages.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raipal_controller",
+        "revision": "eca785fe9bf638cc6627e1e00d765614c8c22bee",
+        "branch": "feat/grasp-one-episode",
+        "dirty": false,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/raipal_controller.git"
+          },
+          {
+            "name": "task-private",
+            "url": "https://github.com/jiseong1002016/raipal_controller.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_third_party_gui",
+        "revision": "184c2a93df68a957a8d0e171db769c58835746f6",
+        "branch": "main",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/raionrobotics/raisin_third_party_gui.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_dongdrive",
+        "revision": "f00d473689997dd89b2768e785b8a10daa9d326c",
+        "branch": "main",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/jiseong1002016/raisin_dongdrive.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_raipal",
+        "revision": "2cef208f8fdcf6b4ae9d869cf92e82e2af3093f0",
+        "branch": "feat/grasp-one-episode",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "jiseong",
+            "url": "https://github.com/jiseong1002016/raisin_raipal.git"
+          },
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/raisin_raipal.git"
+          },
+          {
+            "name": "task-private",
+            "url": "https://github.com/jiseong1002016/raisin_raipal.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_raipal/resource/urdf_head",
+        "revision": "7b96dbabb48c52021c6f57aa12d6dfbc0ef98629",
+        "branch": "main",
+        "dirty": false,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/HEAD-URDF.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_raipal/resource/urdf_raipal",
+        "revision": "4b313b7e81733dab29cf1855ec93f26c6a8f10a3",
+        "branch": "",
+        "dirty": false,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/RAIPAL-URDF.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_third_party_raipal",
+        "revision": "473b70c1aacdba06d5b77cdb923d0b5bc160af06",
+        "branch": "main",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/raisin_third_party_raipal.git"
+          }
+        ]
+      },
+      {
+        "path": "/home/raipal/raisin_master/src/raisin_third_party_raipal/raisimRaipal",
+        "revision": "8a0f3a30fc59575f2d82f885193c3a1d1fb744f5",
+        "branch": "main",
+        "dirty": true,
+        "remotes": [
+          {
+            "name": "origin",
+            "url": "https://github.com/railabatkaist/raisimRaipal.git"
+          }
+        ]
+      }
+    ]
+  },
+  "vendor_submodules": [
+    {
+      "path": "vcpkg",
+      "fetch_url": "https://github.com/microsoft/vcpkg",
+      "revision": "5ed70064390f11112c34b91a6382bba0fdc1706d",
+      "role": "existing vendor pin; unchanged"
+    }
+  ]
+}

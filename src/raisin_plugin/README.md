@@ -7,6 +7,7 @@ This source collection is versioned in the `raisin_master` repository.
 - `ee/raisin_gui_raipal_ee_window`: EE GUI plugin.
 - `ee/test`: offline EE and robot integration checks.
 - `raisin_d405_plugin`: real/nonreal camera plugin and its resources.
+- `tactile/`: tactile sensor contract, USB/simulation plugin, and GUI window.
 
 The robot-specific bridge and maintenance sequence remain in
 `../raisin_raipal/src/raisin_raipal`. The node retains ownership of the shared

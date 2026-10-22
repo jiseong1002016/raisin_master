@@ -67,8 +67,7 @@ set(_raipal_sources
     raipal_controller/raisin_raipal_motion_editor_controller
     raipal_controller/raisin_raipal_swing_controller
     raipal_controller/raisin_raipal_grasp_controller
-    raisin_plugin
-    raisin_raipal/tactile/raisin_gui_tactile_window)
+    raisin_plugin)
 
 foreach(_window IN ITEMS
     lock_profiler threadpool robot robot_dev raidrive robot_selection ffmpeg
