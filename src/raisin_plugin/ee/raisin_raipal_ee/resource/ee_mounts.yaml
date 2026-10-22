@@ -1,0 +1,35 @@
+schema: raipal-ee-mount-preview-v1
+source_status: CAD-derived; physical mounting has not been verified
+base_joint: ee_base
+base_joint_mode: fixed at zero
+mounts:
+  # Original L mount RPY: [-pi/2, 0, pi/2] (roll -90 deg).
+  # The earlier +180 deg correction was a not-yet-homed L7 pose, not a mount error;
+  # it has been removed. Retain only the exact +30 deg hardware phase compensation.
+  # EE versus straight stub: exactly -30 deg mounting phase about L7 +Y.
+  # Reported L7 feedback -0.493 versus -0.015 rad was heavily rounded;
+  # those approximate readings do not define the compensation angle.
+  # Compensate +30 deg about L7 +Y by the right-hand rule, equivalently EE +X:
+  # mount roll -90 -> -60 deg. Do not change L7 encoder zero or homing.
+  # Restore roll -90 deg only after correcting the mechanical EE mounting phase.
+  left:
+    parent_link: L_ee
+    xyz_m: [0, -0.027, 0]
+    rpy_rad: [-1.0471975511965976, 0, 1.5707963267949]
+  right:
+    parent_link: R_ee
+    xyz_m: [0, 0.027, 0]
+    rpy_rad: [-1.5707963267949, 0, -1.5707963267949]
+mechanics_preview:
+  status: canonical URDF mimic kinematics; encoder calibration is separate
+  driver_order: [ee_01_left, ee_02_right]
+  joint_order: [ee_01_left, ee_02_right, ee_13_left, ee_34_left, ee_02_left, ee_01_right, ee_13_right, ee_34_right]
+  jacobian_rows:
+    - [1, 0]
+    - [0, 1]
+    - [0.4, 0]
+    - [-0.4, 0]
+    - [1, 0]
+    - [0, 1]
+    - [0, 0.4]
+    - [0, -0.4]

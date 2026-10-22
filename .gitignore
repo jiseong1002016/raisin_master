@@ -50,6 +50,8 @@ generated/*
 build/*
 install/*
 src/*
+!src/raisin_plugin/
+!src/raisin_ethercat/
 log/*
 git_pull.sh
 
@@ -84,3 +86,4 @@ vcpkg_installed/*
 /runtime/
 /homing_ee_*.conf
 /homing_ee_*.conf.tmp
+/raisim2Lib

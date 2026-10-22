@@ -56,12 +56,25 @@
       "displayName": "Linux Release",
       "binaryDir": "${sourceDir}/cmake-build-release",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "raipal-release",
+      "inherits": "linux-release",
+      "displayName": "RAIPAL node, GUI and devices (RaiSim 2.9.4)",
+      "cacheVariables": {
+        "RAISIN_RAIPAL_WORKSPACE": true,
+        "RAISIN_BUILD_TEST": false,
+        "BUILD_TESTING": true,
+        "RAISIN_GUI_ROBOT_WINDOW_BUILD_TESTS": true,
+        "RAISIN_GUI_ROBOT_DEV_WINDOW_BUILD_TESTS": true
+      }
     }
   ],
   "buildPresets": [
     { "name": "windows-debug", "configurePreset": "windows-debug" },
     { "name": "windows-release", "configurePreset": "windows-release" },
     { "name": "linux-debug", "configurePreset": "linux-debug" },
-    { "name": "linux-release", "configurePreset": "linux-release" }
+    { "name": "linux-release", "configurePreset": "linux-release" },
+    { "name": "raipal-release", "configurePreset": "raipal-release", "jobs": 2 }
   ]
 }

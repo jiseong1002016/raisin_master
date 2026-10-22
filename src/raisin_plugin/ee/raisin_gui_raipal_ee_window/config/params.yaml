@@ -1,0 +1,6 @@
+robot_nickname: railab_raipal
+state_timeout_ms: 500
+response_timeout_ms: 500
+open_when_start: false
+only_single_instance_allowed: true
+menu_tab: tools

@@ -17,13 +17,13 @@ option(RAISIN_RELEASE_BUILD "Build unit tests for the project" OFF)
 option(RAISIN_BUILD_TEST "Build unit tests for the project" ON)
 
 if(NOT RAISIN_RELEASE_BUILD)
-    set(CMAKE_INSTALL_PREFIX "@@SCRIPT_DIR@@/install")
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/install")
 endif()
 
-include(@@SCRIPT_DIR@@/cmake/raisin_helper.cmake)
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/raisin_helper.cmake")
 
-set(CMAKE_PREFIX_PATH "@@SCRIPT_DIR@@/install;${CMAKE_PREFIX_PATH}" CACHE PATH "Search paths for CMake packages")
-set(RAISIN_MASTER_INCLUDE @@SCRIPT_DIR@@/generated/include CACHE STRING "include path")
+list(PREPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
+set(RAISIN_MASTER_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/generated/include" CACHE STRING "include path")
 set(CMAKE_DEBUG_POSTFIX "_debug_build" CACHE STRING "Debug Postfix for lib, samples and tools")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -72,7 +72,12 @@ install(DIRECTORY generated/include/
         FILES_MATCHING PATTERN "*.hpp"     # only install .hpp files
 )
 
-@@SUB_PROJECT@@
+option(RAISIN_RAIPAL_WORKSPACE "Build the maintained RAIPAL node, GUI and device workspace" OFF)
+if(RAISIN_RAIPAL_WORKSPACE)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/raipal_workspace.cmake")
+else()
+    @@SUB_PROJECT@@
+endif()
 
 
 if (WIN32)

@@ -204,8 +204,9 @@ def _build_single_cmake_project(
     is_flag=True,
     help="Enable building unit tests for this setup run",
 )
+@click.option("--cmake-only", is_flag=True, help="Regenerate root CMake without changing install, generated headers or dependencies")
 @click.argument("targets", nargs=-1)
-def setup_command(test, targets):
+def setup_command(test, cmake_only, targets):
     """
     Generate interface files (.msg, .srv, .action) and configure CMake.
 
@@ -219,6 +220,13 @@ def setup_command(test, targets):
     """
     targets = list(targets)
     process_build_targets(targets)
+
+    if cmake_only:
+        projects = find_project_directories(
+            ["src"], "install", get_packages_to_ignore(), get_repos_to_ignore(), copy_assets=False
+        )
+        update_cmake_file(projects, "", test)
+        return
 
     if not g.build_pattern:
         click.echo("🛠️  building all patterns")
@@ -617,7 +625,7 @@ def find_topic_directories(search_directories):
 
 
 def find_project_directories(
-    search_directories, install_dir, packages_to_ignore=None, repos_to_ignore=None
+    search_directories, install_dir, packages_to_ignore=None, repos_to_ignore=None, copy_assets=True
 ):
     """
     Search for all subdirectories in <g.script_directory> containing 'CMakeLists.txt'.
@@ -654,7 +662,7 @@ def find_project_directories(
                 # Do not recurse into subdirectories (clear the dirs list)
                 dirs.clear()
 
-    for project_directory in project_directories:
+    for project_directory in project_directories if copy_assets else []:
         # Directories to copy
         directories_to_copy = ["resource", "config", "scripts"]
 
@@ -767,6 +775,12 @@ def find_interface_files(
     return tuple(interface_map[interface][1] for interface in interface_types)
 
 
+def cmake_project_name(project_dir):
+    content = (Path(project_dir) / "CMakeLists.txt").read_text()
+    declared = re.search(r'\bproject\(\s*"?([A-Za-z_][A-Za-z0-9_-]*)', content, re.IGNORECASE)
+    return declared.group(1) if declared else os.path.basename(project_dir)
+
+
 def build_dependency_graph(project_directories):
     """
     Build a dependency graph from the list of project directories.
@@ -791,7 +805,7 @@ def build_dependency_graph(project_directories):
         cmake_file_path = os.path.join(project_dir, "CMakeLists.txt")
 
         # Find the project name (assumes the project name is the directory name or can be derived)
-        project_name = os.path.basename(project_dir)
+        project_name = cmake_project_name(project_dir)
 
         # Get the dependencies of this project
         dependencies = find_dependencies(cmake_file_path)
@@ -954,15 +968,15 @@ def update_cmake_file(project_directories, cmake_dir, build_test_enabled: bool):
         cmake_template_content = template_file.read()
 
     # Create a quick lookup from project name to its full directory path
-    project_dir_map = {os.path.basename(d): d for d in project_directories}
+    project_dir_map = {cmake_project_name(d): d for d in project_directories}
 
     subdirectory_lines = []
     for project_name in sorted_project_names:
         if project_name in project_dir_map:
             project_dir = project_dir_map[project_name]
             if (Path(project_dir) / "CMakeLists.txt").is_file():
-                project_dir = project_dir.replace("\\", "/")
-                subdirectory_lines.append(f"add_subdirectory({project_dir})")
+                project_dir = os.path.relpath(project_dir, g.script_directory).replace("\\", "/")
+                subdirectory_lines.append(f'add_subdirectory("{project_dir}")')
 
     cmake_content = cmake_template_content.replace(
         "@@SUB_PROJECT@@", "\n".join(subdirectory_lines)
