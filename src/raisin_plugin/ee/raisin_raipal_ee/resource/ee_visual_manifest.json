@@ -1,0 +1,133 @@
+{
+  "schema": "raipal-ee-visual-source-v1",
+  "model": "ee_visual.urdf",
+  "mechanics": "ee_mounts.yaml",
+  "source_paths": [
+    {
+      "path": "rsc/end-effector/urdf/end-effector.urdf",
+      "sha256": "fb5bca6a2f69c303d6a366e444a0c70fec0e20905e4569b6ae39d33b230aeeb0"
+    },
+    {
+      "path": "rsc/RAIPAL-URDF/modules/end-effector_L",
+      "sha256": "60b7dd483449daedb2be46dde7405818da67309a9bc0aafaaf56e7790f149e5f"
+    },
+    {
+      "path": "rsc/RAIPAL-URDF/modules/end-effector_R",
+      "sha256": "cfd06528c22ffb50aa36f3caf24902f0e9124ee03630dcbe07133e8c2677ec79"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_1_left.obj",
+      "sha256": "c65cc438a3cb0d28963f2804bba625284d959008793b289f6cb5737902159966"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_1_right.obj",
+      "sha256": "36c4b21276a8be5d190cba97a2ef4d355bc7807d01f356dc0f6dda35f43bc605"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_2_left.obj",
+      "sha256": "80aafad0a567a9945645ceb34b960f9f5ac43d605d6a042235993782675671d5"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_2_right.obj",
+      "sha256": "2174720ffaba23f5b535eb3206ba81866ba542d4b95722c5e4cbbb0a68e7f320"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_3_left.obj",
+      "sha256": "61ef521264d8d9aef6ffd7a3821738f0c9d44ac8e9c96e44839e1ba01cdc6435"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_3_right.obj",
+      "sha256": "a226dc16adeb322037087bcb34eb59f12f39676cd964a61a2306aad1f74e7c63"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_4_left.obj",
+      "sha256": "695eb1662b339e3e34f17a0ef0131b818717db1cceaf69d5ad5b394b0a43018e"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_4_right.obj",
+      "sha256": "220e30b4550829847f16eddfc1551d1c25664fb89e5d6ae74284e7d35c0ec480"
+    },
+    {
+      "path": "rsc/end-effector/meshes/ee_base.obj",
+      "sha256": "e5af89c1c53f18cc52cb0dfd250b9c598606025541c66d0686c5a1e84b61ea03"
+    }
+  ],
+  "mapping_header": {
+    "path": "raisin_raipal/gripper_mapping.hpp",
+    "sha256": "247af3b7edddb33bf6d4ca5a8f5324d90350be6961cf06de63b28ebb0a183b6f"
+  },
+  "generated_urdf_sha256": "18824de1ae6b02a2f7052831542146d6c4f995641dca34170e9eb76519325dda",
+  "generated_mounts_sha256": "1701085931ff40d433afd76b2334420a705e9a2b17155de1b7cb520ec3141022",
+  "mesh_files": [
+    "ee_1_left.obj",
+    "ee_1_right.obj",
+    "ee_2_left.obj",
+    "ee_2_right.obj",
+    "ee_3_left.obj",
+    "ee_3_right.obj",
+    "ee_4_left.obj",
+    "ee_4_right.obj",
+    "ee_base.obj"
+  ],
+  "mounts": {
+    "left": {
+      "parent_link": "L_ee",
+      "xyz_m": "0 -0.027 0",
+      "rpy_rad": "-1.5707963267949 0 1.5707963267949"
+    },
+    "right": {
+      "parent_link": "R_ee",
+      "xyz_m": "0 0.027 0",
+      "rpy_rad": "-1.5707963267949 0 -1.5707963267949"
+    }
+  },
+  "mapping_status": "training crosswire preview hypothesis; unvalidated on hardware",
+  "driver_joint_order": [
+    "ee_01_left",
+    "ee_02_right"
+  ],
+  "joint_order": [
+    "ee_01_left",
+    "ee_02_right",
+    "ee_13_left",
+    "ee_34_left",
+    "ee_02_left",
+    "ee_01_right",
+    "ee_13_right",
+    "ee_34_right"
+  ],
+  "jacobian_rows": [
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      -1,
+      -1
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      0,
+      -1
+    ],
+    [
+      -1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      -1,
+      -1
+    ]
+  ]
+}

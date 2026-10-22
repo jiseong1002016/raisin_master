@@ -1,0 +1,25 @@
+thread_group: core_sensor
+allow_multiple_instances: false
+is_loadable: true
+is_unloadable: true
+rate: 30
+topic_prefix: railab_raipal/d405
+frame_id: d405_depth_optical_frame
+# Empty selects exactly one attached D405; other RealSense models are rejected.
+serial: ""
+width: 640
+height: 480
+fps: 30
+roi_depth_xywh: [288, 208, 64, 64]
+# Source-scene translation registration needs the full object silhouette;
+# its example overrides this ROI. Grasp snapshots include <=1200 depth points.
+min_depth_m: 0.07
+max_depth_m: 0.5
+min_valid_pixels: 25
+# Standard Raisin camera GUI transport; created only when a viewer subscribes.
+publish_compressed: true
+# NONREAL only: world uses current RaiSim collision geometry; plane is the transport fixture.
+simulation_source: plane
+simulation_ee_frame: L_ee
+# 40 x 30 rays expanded to 640 x 480. Encoding runs outside the simulation mutex.
+simulation_ray_stride: 16

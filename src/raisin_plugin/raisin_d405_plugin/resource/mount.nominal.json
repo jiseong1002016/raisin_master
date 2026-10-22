@@ -1,0 +1,17 @@
+{
+  "mount_reference_link": "ee_base",
+  "camera_frame": "d405_depth_optical_frame",
+  "calibration_source": "D405view_20261022_EE_negative_Z_mount_side",
+  "reference_image_url": "https://drive.google.com/file/d/1oVq2lTyAFXz2jKRUKh1dqDeMbJh4szK9/view",
+  "reference_image_sha256": "91b66e2ceff0538242e625e55da6f4531ad9fb21f0b4a6081736955ff9a70785",
+  "calibration_verified": false,
+  "optical_origin_ee_base_m": [0.0, 0.0, -0.1],
+  "look_at_ee_base_m": [0.0, 0.25, 0.0],
+  "tilt_from_ee_base_positive_y_deg": 21.80140948635181,
+  "camera_to_ee_base": [
+    [-1.0, 0.0, 0.0, 0.0],
+    [0.0, -0.37139067635410367, 0.9284766908852592, 0.0],
+    [0.0, 0.9284766908852592, 0.37139067635410367, -0.1],
+    [0.0, 0.0, 0.0, 1.0]
+  ]
+}

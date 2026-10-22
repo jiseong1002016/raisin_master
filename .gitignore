@@ -93,8 +93,10 @@ vcpkg_installed/*
 /sdk/
 # Source packages are versioned in their own repositories.
 src/*
+!src/raisin_plugin/
 
 # Deployed runtime binaries; sources remain in package repositories.
 /runtime/
 /homing_ee_*.conf
 /homing_ee_*.conf.tmp
+/raisim2Lib

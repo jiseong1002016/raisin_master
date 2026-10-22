@@ -273,10 +273,39 @@ class CMakeTemplateIsolationTest(unittest.TestCase):
         shutil.copy2(self.templates / "CMakeLists.txt", self.root / "templates/CMakeLists.txt")
         update_cmake_file([], "", False)
         content = (self.root / "CMakeLists.txt").read_text()
-        self.assertIn(f'{self.root}/generated/include', content)
+        self.assertIn('${CMAKE_CURRENT_SOURCE_DIR}/generated/include', content)
+        self.assertNotIn(str(self.root), content)
         self.assertIn("update_build_dir_in_yaml", content)
         self.assertNotIn("raisin_android_sdk", content)
         self.assertNotIn("@", content)
+
+    def test_host_generation_uses_declared_projects_and_relative_paths(self):
+        from commands.setup import update_cmake_file
+
+        (self.root / "templates").mkdir()
+        shutil.copy2(self.templates / "CMakeLists.txt", self.root / "templates/CMakeLists.txt")
+        source = self.root / "src/device plugins"
+        source.mkdir(parents=True)
+        (source / "CMakeLists.txt").write_text("project(raipal_device_plugins)\n")
+        update_cmake_file([str(source)], "", False)
+        content = (self.root / "CMakeLists.txt").read_text()
+        self.assertIn('add_subdirectory("src/device plugins")', content)
+        self.assertNotIn(str(self.root), content)
+
+    def test_cmake_discovery_preserves_installed_configuration(self):
+        from commands.setup import find_project_directories
+
+        source = self.root / "src/device"
+        (source / "config").mkdir(parents=True)
+        (source / "CMakeLists.txt").write_text("project(device)\n")
+        (source / "config/params.yaml").write_text("source defaults\n")
+        installed = self.root / "install/config/device/config/params.yaml"
+        installed.parent.mkdir(parents=True)
+        installed.write_text("user settings\n")
+        self.assertEqual(
+            find_project_directories(["src"], "install", copy_assets=False), [str(source)]
+        )
+        self.assertEqual(installed.read_text(), "user settings\n")
 
 
 class TargetSelectionTest(unittest.TestCase):
