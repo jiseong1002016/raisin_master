@@ -262,6 +262,20 @@ raisin build -t debug --asan && raisin test debug --asan --unit
 raisin build -t debug --tsan && raisin test debug --tsan --unit
 ```
 
+### Run the RAIPAL Node
+
+Launch with an explicit hardware profile from the installed runtime:
+
+```bash
+# Nonreal, single left arm with EE
+./scripts/run_raipal_node.sh single_L_ee_nonreal
+
+# Real, single left arm with EE
+./scripts/run_raipal_node.sh single_L_ee real
+```
+
+Set `RAISIN_NODE_PREFIX` when the node is installed in a machine-specific runtime prefix. The launcher selects the profile explicitly and preserves existing library search paths.
+
 ### 10. Additional Commands
 
 #### Publish a Release
