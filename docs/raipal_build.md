@@ -30,7 +30,7 @@ requires a fresh configure/build/install and ABI validation, not just a relaunch
 
 The validated robot configuration uses these package revisions on both machines:
 
-- `src/raisin_raipal`: `eb2915f5e402a3b1fcc8ea0bf2002a9da99ddfae`.
+- `src/raisin_raipal`: `2cef208f8fdcf6b4ae9d869cf92e82e2af3093f0`.
 - `src/raipal_controller`: `eca785fe9bf638cc6627e1e00d765614c8c22bee`.
 - `src/raisin_gui`: `ecc7db3bc348d412c4b59c30072efd7a173dc1fc`.
 - The nested `RAIPAL-URDF`: `4b313b7e81733dab29cf1855ec93f26c6a8f10a3`.
