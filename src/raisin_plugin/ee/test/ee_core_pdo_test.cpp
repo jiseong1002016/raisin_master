@@ -623,13 +623,81 @@ void testObservedRaipalScanClassification(const TemporaryDirectory& temporary) {
     raisin::ethercat::EthercatInterface bus({});
     bridge.attachEthercat(bus, leftRecords);
   }
+  const auto singleLeftScan = raisin::robot::classifyRaipalEthercatScan(
+      leftRecords, singleLeftProfile);
+  require(armDriveAddresses(singleLeftScan) ==
+              std::vector<std::size_t>{10, 11, 12, 13, 14, 15, 16} &&
+              singleLeftScan.devices.size() == 9,
+          "single-arm profile on the 18-slave bus must select L7 and EE2, not R7");
+  require(singleLeftScan.physicalSlaves == 18 &&
+              singleLeftScan.eeAddresses == std::array<std::size_t, 2>{17, 18} &&
+              singleLeftScan.inactiveArmAddresses ==
+                  std::vector<std::size_t>{3, 4, 5, 6, 7, 8, 9},
+          "physical bus count and inactive R addresses must remain explicit");
+  for (const auto& device : singleLeftScan.devices)
+    require(device.physicalAddress >= 10,
+            "inactive R drives must never enter the registered command-device list");
+  auto compactRecords = leftRecords;
+  compactRecords.erase(compactRecords.begin() + 3, compactRecords.begin() + 10);
+  const auto compactScan = raisin::robot::classifyRaipalEthercatScan(
+      compactRecords, singleLeftProfile);
+  require(compactScan.physicalSlaves == 11 && compactScan.devices.size() == 9 &&
+              compactScan.inactiveArmAddresses.empty() &&
+              compactScan.eeAddresses == std::array<std::size_t, 2>{10, 11} &&
+              armDriveAddresses(compactScan) == std::vector<std::size_t>{3, 4, 5, 6, 7, 8, 9},
+          "the standalone 11-slave L+EE wiring must remain supported");
+  for (const auto address : {1u, 3u, 10u, 17u}) {
+    auto invalid = leftRecords;
+    invalid[address].eep_id += 1;
+    requireThrows([&] {
+      (void)raisin::robot::classifyRaipalEthercatScan(invalid, singleLeftProfile);
+    }, "identity", "wrong hub, inactive arm, active arm, or EE identity must reject");
+  }
+  auto extraRecords = leftRecords;
+  extraRecords.push_back(leftRecords[3]);
   requireThrows([&] {
-    (void)raisin::robot::classifyRaipalEthercatScan(leftRecords, singleLeftProfile);
-  }, "18 physical slaves; profile single_L_ee expects 11",
-     "single-arm profile must report all 18 slaves instead of truncating the scan");
+    (void)raisin::robot::classifyRaipalEthercatScan(extraRecords, singleLeftProfile);
+  }, "19 physical slaves", "undeclared extra devices must not be silently ignored");
+  {
+    raisin::parameter::ParameterContainer parameters;
+    auto overrides = singleLeftProfile.parameter_overrides;
+    parameters.yamlIterator(overrides);
+    auto resolvedConfig = raisin::robot::readEeDriveConfig(parameters);
+    resolvedConfig.homing_file = (temporary.path / "mapped-home.yaml").string();
+    {
+      std::ofstream home(resolvedConfig.homing_file);
+      home << "schema_version: 1\n"
+              "fingerprint: ethercat|left:17:16720:37445:1:142:rx16_tx13:32786:65536:68:1:0|"
+              "right:18:16720:37445:1:142:rx16_tx13:32786:65536:68:-1:0\n"
+              "axes:\n"
+              "- {name: left, encoder_offset_counts: -155173}\n"
+              "- {name: right, encoder_offset_counts: -115714}\n";
+    }
+    EeDriveBridge bridge(resolvedConfig);
+    require(!bridge.state().homed, "17/18 home must not match nominal 10/11 addresses");
+    raisin::ethercat::EthercatInterface bus({});
+    bridge.attachEthercat(bus, leftRecords, singleLeftScan.eeAddresses);
+    const auto& devices = bus.*fixtureMember(BusDevices{});
+    require(devices.size() == 2 && devices[0]->getSlaveNum() == 17 &&
+                devices[1]->getSlaveNum() == 18 && bridge.state().homed &&
+                !bridge.state().enabled && !bridge.state().axes[0].position_valid,
+            "EE attachment must use resolved addresses and reload only their matching saved home");
+    bus.clearDevices();
+    bridge.attachEthercat(bus, compactRecords, compactScan.eeAddresses);
+    require(devices.size() == 2 && devices[0]->getSlaveNum() == 10 &&
+                devices[1]->getSlaveNum() == 11 && !bridge.state().homed,
+            "returning to compact wiring must not reuse the 17/18 home offsets");
+    bus.clearDevices();
+    requireThrows([&] {
+      bridge.attachEthercat(bus, leftRecords, std::array<std::size_t, 2>{3, 4});
+    }, "identity/PDO mismatch", "resolved EE mapping must not bypass drive identity checks");
+    require(bus.*fixtureMember(BusDevices{}) ==
+                std::vector<std::shared_ptr<raisin::ethercat::EthercatDevice>>{},
+            "failed EE identity validation must not register any device");
+  }
   requireThrows([&] {
     (void)raisin::robot::classifyRaipalEthercatScan(leftRecords, rightEeProfile);
-  }, "EE drive identity/PDO mismatch", "right-EE mapping must reject left-EE topology");
+  }, "identity/PDO mismatch", "right-EE mapping must reject left-EE topology");
   {
     EeDriveBridge bridge(config);
     raisin::ethercat::EthercatInterface bus({});

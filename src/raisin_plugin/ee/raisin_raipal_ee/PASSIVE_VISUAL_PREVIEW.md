@@ -45,10 +45,16 @@ enable EE communication; actuation remains a separate gate and is never enabled
 automatically. Use `dual_arm_left_ee` for the left grasp setup.
 Its physical SOEM order is hubs 1–2, arm drives 3–16, and EE drives 17–18,
 matching the Railab scan on 2026-10-22. The right-EE profile instead places
-EE drives at 10–11 between the two arms. `single_L_ee` requires an actual
-11-slave bus (two hubs, seven arm drives, two EE drives); it does not hide
-the R-arm drives on an 18-slave bus. Select `dual_arm_left_ee` when both
-arms and a left-mounted EE are connected.
+EE drives at 10–11 between the two arms. `single_L_ee` requires eleven selected
+slaves (two hubs, seven L-arm drives, two EE drives), not necessarily an
+eleven-slave physical bus. Its standalone wiring uses L at 3–9 and EE at 10–11.
+The explicitly declared eighteen-slave layout uses L at 10–16 and EE at 17–18;
+R at 3–9 is identity-checked but is not registered for motor commands. All
+mapped outputs start at zero, including unused drives. The physical bus count
+and full-bus WKC remain checked; unknown layouts and wrong identities/PDOs
+still reject. `dual_arm_left_ee` controls both arms instead of selecting L only.
+Resolved EE addresses are also used for firmware checks and saved-home
+fingerprints; a home for a different layout is not silently reused.
 A matching real home file seeds encoder offsets, but each new EtherCAT session
 starts unhomed and requires explicit `set_home`; feedback invalidation or staleness
 clears that session's home. A normal EE stop retains home while both feedback

@@ -106,7 +106,21 @@ source ./ld_prefix_path.sh
 ./install/bin/raisin_gui
 ```
 
-The single-arm real profile expects 11 EtherCAT slaves; a bus with 18 slaves
-belongs to a different physical layout. Do not suppress the mismatch or change
-drive addresses merely to remove an R arm from the GUI. Node startup itself
-does not authorize Init Motor, Set Home, Joint Test, Get Ready or motor motion.
+The single-arm real profile requires eleven selected EtherCAT slaves: two hubs,
+L1–L7 and two EE axes. It supports these explicitly declared physical layouts:
+
+- Standalone eleven-slave bus: hubs 1–2, L at 3–9, EE at 10–11.
+- Eighteen-slave bus: hubs 1–2, L at 10–16, EE at 17–18; R at 3–9 stays unused.
+
+The extra layout is in `config/L_ee/hardware_profiles.yaml` under
+`ethercat.additional_bus_layouts`. Every physical drive must be accounted for
+exactly once; selected and inactive drives must match their identity/PDO pins.
+Only selected drives enter the command-device list. Existing EtherCAT startup
+zeroes every mapped output, including unused drives, and WKC still covers the
+entire physical bus. Scan-to-SAFE_OP/OP count changes remain an error. This is
+not an arbitrary “at least eleven” check and does not automatically enable EE
+actuation. Saved home is matched to the resolved EE addresses, without changing
+home files or their calibration values.
+
+Node startup itself does not authorize Init Motor, Set Home, Joint Test,
+Get Ready or motor motion.
