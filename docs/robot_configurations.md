@@ -56,6 +56,8 @@ parameters remain under `default`; `L_ee` adds `test_arm_sides: [L]`. Trajectory
 catalogs and motion-editor catalogs use the selected configuration directory,
 so an L-only robot is not offered the default dual-arm demonstrations. An
 explicit `runtime_config_directory` remains an intentional external input.
+An L+EE-only trajectory may provide its own `settings.yaml` without creating a
+matching preset under `default`; its selected user override still applies.
 
 Shared URDF modules and meshes remain in their canonical asset directories.
 The selected hardware profile pins the matching scene and generated assembly;
