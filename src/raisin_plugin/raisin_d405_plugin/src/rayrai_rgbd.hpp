@@ -14,13 +14,14 @@ namespace raisin::plugin {
 class RayraiRgbd {
  public:
   RayraiRgbd(raisim::World& world, int width, int height, float focal, double near, double far)
-      : width_(width), height_(height) {
+      : world_(world), width_(width), height_(height) {
     rayrai::sdl::ensureSdlVideoInit();
     RayraiWindow::createOffscreenGlContext(window_, context_, "d405_rayrai_rgbd");
     try {
       std::lock_guard lock(world);
       renderer_ = std::make_unique<RayraiWindow>(world, width, height);
       renderer_->setAsyncMeshLoadingEnabled(false);
+      object_configuration_ = world_.getConfigurationNumber();
       camera_ = std::make_unique<Camera>();
       camera_->resizeRenderTargets(width, height);
       camera_->aspect = float(width) / height;
@@ -47,6 +48,12 @@ class RayraiRgbd {
   ~RayraiRgbd() { cleanup(); }
 
   void render(const Eigen::Vector3d& origin, const Eigen::Matrix3d& optical) {
+    if (object_configuration_ != world_.getConfigurationNumber()) {
+      // Episode plant replacement also edits the core's visual list. Rayrai
+      // caches articulated visual counts; rebuild its wrappers before drawing.
+      renderer_->swapWorld(std::shared_ptr<raisim::World>(&world_, [](auto*) {}));
+      object_configuration_ = world_.getConfigurationNumber();
+    }
     camera_->position = {origin.x(), origin.y(), origin.z()};
     camera_->front = {optical(0, 2), optical(1, 2), optical(2, 2)};
     camera_->up = {-optical(0, 1), -optical(1, 1), -optical(2, 1)};
@@ -76,6 +83,8 @@ class RayraiRgbd {
     if (context_) { SDL_GL_DeleteContext(context_); context_ = nullptr; }
     if (window_) { SDL_DestroyWindow(window_); window_ = nullptr; }
   }
+  raisim::World& world_;
+  unsigned long object_configuration_{};
   int width_, height_;
   SDL_Window* window_{};
   SDL_GLContext context_{};
