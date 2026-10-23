@@ -4,7 +4,7 @@
   "root_repository": {
     "fetch_url": "https://github.com/jiseong1002016/raisin_master.git",
     "upstream_url": "https://github.com/raionrobotics/raisin_master.git",
-    "ref": "feat/episode-continue-20261024",
+    "ref": "feat/nonreal-episode-closure-20261024",
     "revision": "the commit containing this lock file",
     "fallback_reason": "upstream readable, account has no push permission"
   },
@@ -32,6 +32,11 @@
       "local": "/home/jiseong/raisim_ws/isolation/episode_continue_20261024",
       "railab": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024",
       "note": "C source changes preserved as commits and merged into task sources; native install stays isolated. Formal Git source promotion does not replace the operating hardware install."
+    },
+    "nonreal_closure": {
+      "local": "/home/jiseong/raisim_ws/isolation/nonreal_episode_closure_20261024",
+      "railab": "/home/raipal/workspace/jiseong/isolation/nonreal_episode_closure_20261024",
+      "note": "Finite NONREAL source fixes and isolated execution; original install/bundle remain unchanged, final B0 uses a read-only namespace overlay. See docs/grasp_episode_nonreal_closure_validation.json."
     }
   },
   "packages": [
@@ -44,8 +49,8 @@
     {
       "path": "src/raipal_controller",
       "fetch_url": "https://github.com/jiseong1002016/raipal_controller.git",
-      "revision": "24db04767f724d870616a45106c6f69c33f233e6",
-      "ref": "feat/episode-continue-20261024",
+      "revision": "605fcca02207a6e6b65c29f3f1dcaa6bd2ed25b8",
+      "ref": "feat/nonreal-episode-closure-20261024",
       "upstream_url": "https://github.com/railabatkaist/raipal_controller.git",
       "fallback_reason": "upstream readable, account has no push permission"
     },
@@ -107,8 +112,8 @@
     {
       "path": "grasp_iteration",
       "fetch_url": "https://github.com/jiseong1002016/grasp_iteration.git",
-      "revision": "332b69a8ce0bd3bde2d264363ce5d45bf28410e7",
-      "ref": "feat/episode-continue-20261024"
+      "revision": "b0bbf3e73878e8cd04a1ecec83914a04059ff359",
+      "ref": "feat/nonreal-episode-closure-20261024"
     }
   ],
   "legacy_railab_observation": {

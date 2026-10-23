@@ -1,0 +1,560 @@
+{
+  "schema": "grasp_episode_nonreal_closure_validation_v1",
+  "date_local": "2026-10-24",
+  "created_utc": "2026-10-23T18:17:52.281924+00:00",
+  "status": "finite_NONREAL_software_validation_complete_with_qualification_limits",
+  "scope": {
+    "REAL_robot_node_started": false,
+    "actuator_devices_opened": false,
+    "NONREAL_nodes_started": true,
+    "D405_sensor_only_opened": true,
+    "training_or_registry_promotion": false,
+    "physical_motion_qualified": false,
+    "independent_grasp_success": null,
+    "is_model_performance_evaluation": false,
+    "relaxed_timing": true,
+    "operating_install_replaced": false
+  },
+  "roots": {
+    "local": "/home/jiseong/raisim_ws/isolation/nonreal_episode_closure_20261024",
+    "railab": "/home/raipal/workspace/jiseong/isolation/nonreal_episode_closure_20261024"
+  },
+  "sources": {
+    "ref": "feat/nonreal-episode-closure-20261024",
+    "canonical_ref": "feat/grasp-episode-preparation-20261023",
+    "master": "containing commit; source base 25c309e",
+    "controller": "605fcca02207a6e6b65c29f3f1dcaa6bd2ed25b8",
+    "project": "b0bbf3e73878e8cd04a1ecec83914a04059ff359",
+    "robot": "c11e2af919b78d50eff8ac771012387f0fa75e34",
+    "pins": "../config/raipal_sources.lock.json",
+    "production_file_sha256": {
+      "controller/raisin_raipal_grasp_controller/python/raipal_grasp/runtime.py": "869476da2298eeac765264648e1a2a5997be740790caeb1ec5a7991ad5e4a4d5",
+      "project/native/environment/include/GraspBV0Controller.hpp": "16795e16100286a55f324233beccd23f8f69a2b1ed3d53f111b9a221d2b74c2b"
+    },
+    "model_urdf_revision": "4b313b7e81733dab29cf1855ec93f26c6a8f10a3",
+    "prefix": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install",
+    "bundle": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/inference_bundle_002",
+    "bundle_receipt_sha256": "bc5786c8ca7a633ca17a0fbecbab8619ffe8d325553308fda16ad84f5c1e3eed",
+    "baseline_B0_sha256": "5a9f3ab4b1eaea435482e98051639ada0d6548dd08ccda32ec5ddd1b186a448f",
+    "final_B0_sha256": "8405d487902aacb20491592754d1f8c4ae4fb7b6fb97c30848b1992381840075",
+    "B0_build": "evidence/contact_gate/remote_build_ready/build.json",
+    "reused_path_check_object": true,
+    "training_simulator_extension_rebuilt": false,
+    "final_B0_loaded_proof": "evidence/t07/smoke_result.json:loaded_b0_overlay",
+    "immutable_before": "evidence/t07_immutable_before.json",
+    "immutable_after": "evidence/t07_immutable_after.json",
+    "native_execution_sources": {
+      "t01_to_t06": "controller605fcca + baseline B0",
+      "t07": "controller605fcca + final B0",
+      "t02_is_final_B0_performance_test": false
+    }
+  },
+  "production_fixes": [
+    {
+      "owner": "controller/runtime.py",
+      "change": "Reject non-object JSON with ValueError before message.get",
+      "before": "evidence/episode_audit/runtime_server_before_fix.log",
+      "after": "evidence/episode_audit/runtime_server_result.json",
+      "peer_cases": 13
+    },
+    {
+      "owner": "project/GraspBV0Controller.hpp",
+      "change": "Require fresh valid tactile release plus existing pad-count condition at retarget stage transitions",
+      "before": "evidence/contact_gate/before.json",
+      "after": "evidence/contact_gate/final_v2.json",
+      "native_after": "evidence/episode_audit/n10_postfix/native_boundary_result.json",
+      "limits": [
+        "Advancement gate does not stop an already moving Cartesian retreat/pregrasp command",
+        "Finger-open check remains commanded target, not measured full opening",
+        "Held clear pair can pass within the existing freshness budget"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "id": "N01",
+      "branch": "rayrai to production SSH AnyGrasp to candidate/IK/path preparation to active B1 termination",
+      "status": "passed_actual_pipeline",
+      "evidence": [
+        "t01",
+        "t07"
+      ],
+      "proof_boundary": "No close/lift/hold, alarm, proposal or grasp quality proof."
+    },
+    {
+      "id": "N02",
+      "branch": "early A1 discarded, READY hold, new A1 fresh-frame activation",
+      "status": "passed_actual_native",
+      "evidence": [
+        "t01",
+        "t07"
+      ],
+      "proof_boundary": null
+    },
+    {
+      "id": "N03",
+      "branch": "autonomous budget terminal and post-terminal latch",
+      "status": "passed_actual_native_and_synthetic",
+      "evidence": [
+        "t01",
+        "t07",
+        "episode_audit/runtime_terminal_result.json"
+      ],
+      "proof_boundary": null
+    },
+    {
+      "id": "N04",
+      "branch": "natural close/lift/hold and actual model failure or proposal path",
+      "status": "executed_IK_safety_terminal_grasp_success_unproven",
+      "evidence": [
+        "t02"
+      ],
+      "proof_boundary": "Natural safety termination was observed on baseline B0; no final B0 full grasp-success or spontaneous alarm/recovery claim."
+    },
+    {
+      "id": "N05",
+      "branch": "B1 cancellation while waiting READY",
+      "status": "passed_actual_native",
+      "evidence": [
+        "t03"
+      ],
+      "proof_boundary": null
+    },
+    {
+      "id": "N06",
+      "branch": "B1 during native preparation or blocking actual SDK inference",
+      "status": "passed_actual_native",
+      "evidence": [
+        "t04b"
+      ],
+      "proof_boundary": "Inference cancellation need not create an Episode result."
+    },
+    {
+      "id": "N07",
+      "branch": "active backend disconnect and timeout",
+      "status": "passed_actual_native",
+      "evidence": [
+        "t05",
+        "n07"
+      ],
+      "proof_boundary": null
+    },
+    {
+      "id": "N08",
+      "branch": "same-load reset no replay versus fresh controller reload",
+      "status": "passed_actual_native",
+      "evidence": [
+        "t06"
+      ],
+      "proof_boundary": "Automatic same-controller episode rearm is not implemented."
+    },
+    {
+      "id": "N09",
+      "branch": "physical-hold observer and Episode terminal branches",
+      "status": "passed_synthetic_production_boundary",
+      "evidence": [
+        "episode_audit/runtime_terminal_result.json"
+      ],
+      "proof_boundary": "Synthetic branch test, not an independent grasp success trial."
+    },
+    {
+      "id": "N10",
+      "branch": "failure alarm to Actor/Selector to native retarget and reentry attempt reset",
+      "status": "passed_actual_models_replay_and_synthetic_native_boundary",
+      "evidence": [
+        "episode_audit/n10_postfix/native_boundary_result.json",
+        "episode_audit/n10_postfix/actor_selector_result.json"
+      ],
+      "proof_boundary": "Never describe an injected trigger or synthetic reentry as an independent learned failure detection/grasp success."
+    },
+    {
+      "id": "N11",
+      "branch": "native command trust boundary and Python state wire boundary",
+      "status": "passed_actual_native_and_socket",
+      "evidence": [
+        "n01b",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n08",
+        "episode_audit/runtime_server_result.json"
+      ],
+      "proof_boundary": "Test-only injected protocol, no production fault-injection switches needed."
+    },
+    {
+      "id": "N12",
+      "branch": "AnyGrasp stale/moved/identity/candidate fallback and SSH rejection",
+      "status": "passed_existing_checks_and_saved_geometry",
+      "evidence": [
+        "verification/python_checks.json",
+        "verification/anygrasp_geometry_run.json",
+        "verification/project_checks.json"
+      ],
+      "proof_boundary": null
+    },
+    {
+      "id": "N13",
+      "branch": "every installed object selectable with user table geometry",
+      "status": "passed_all_74_installed_meshes",
+      "evidence": [
+        "verification/deployment_scene_ready.log"
+      ],
+      "proof_boundary": "Does not imply all object poses are visible/reachable or all trained grasps succeed; 74 full SDK trials are unnecessary for selection correctness."
+    },
+    {
+      "id": "N14",
+      "branch": "live D405 camera-only packet and shared AnyGrasp path",
+      "status": "passed_live_camera_adapter_SDK_with_synthetic_frame_transform",
+      "evidence": [
+        "d405/report.json",
+        "d405_fresh/report.json"
+      ],
+      "proof_boundary": "Keep d405/is_simulation:false; NONREAL remains rayrai. Unknown arm/world pose prevents physical world-grasp/path qualification."
+    }
+  ],
+  "native_cases": {
+    "t01": {
+      "receipt": "evidence/t01/smoke_result.json",
+      "sha256": "e1b4e104efa601a6cca06e79fc799a3f732e37eab8ae686b1f00ab8de00635d3",
+      "passed": true,
+      "wall_s": 48.4264292109292,
+      "native_reasons": [
+        "episode_wall_time_budget"
+      ],
+      "active_ticks": [
+        289
+      ]
+    },
+    "t02": {
+      "receipt": "evidence/t02/smoke_result.json",
+      "sha256": "b6526a7119f43aab1a2110d22d3018d0b7aa416ec0cef1075d29bb2d3daa290e",
+      "passed": true,
+      "wall_s": 57.48198675806634,
+      "native_reasons": [
+        "ik_failure_limit"
+      ],
+      "active_ticks": [
+        1124
+      ]
+    },
+    "t03": {
+      "receipt": "evidence/t03/smoke_result.json",
+      "sha256": "5550e75ed21aa692aa4fdf346dc85683cbb1e32961a8d5d3452128cc4b4b70b6",
+      "passed": true,
+      "wall_s": 44.92572693899274,
+      "native_reasons": [
+        "operator B1 ended episode"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "t04b": {
+      "receipt": "evidence/t04b/smoke_result.json",
+      "sha256": "c453de81d5194d1043a8bcd7755f5038bcfb278d96abac12f502d72f29f1c1ea",
+      "passed": true,
+      "wall_s": 23.479879714082927,
+      "native_reasons": [
+        "operator B1 ended episode"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "t05": {
+      "receipt": "evidence/t05/smoke_result.json",
+      "sha256": "7fcbbc4c003017034ae0013fb6d9939acc552ca6c3d627e0e86090be41e25fb2",
+      "passed": true,
+      "wall_s": 45.2592659490183,
+      "native_reasons": [
+        "backend disconnected"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "t06": {
+      "receipt": "evidence/t06/smoke_result.json",
+      "sha256": "a9ff44c0970a9c73654d7900b4b9bc89255ca49b1fa5d22729b072f5ca8eaa5a",
+      "passed": true,
+      "wall_s": 88.40833046706393,
+      "native_reasons": [
+        "operator B1 ended episode",
+        "operator B1 ended episode"
+      ],
+      "active_ticks": [
+        27,
+        28
+      ]
+    },
+    "t07": {
+      "receipt": "evidence/t07/smoke_result.json",
+      "sha256": "0e04e1fac5d64613f8f7fd1bf40cb8ed7c30b7f52103be608509d6fa05c5d87b",
+      "passed": true,
+      "wall_s": 49.043417650973424,
+      "native_reasons": [
+        "episode_wall_time_budget"
+      ],
+      "active_ticks": [
+        289
+      ]
+    },
+    "n01b": {
+      "receipt": "evidence/n01b/smoke_result.json",
+      "sha256": "7adbcf47f53d2543ff10018da0ecebd9e8cd37767b8904f7f13775e1cf1ae94d",
+      "passed": true,
+      "wall_s": 22.452305146027356,
+      "native_reasons": [
+        "[json.exception.parse_error.101] parse error at line 1, column 11: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n02": {
+      "receipt": "evidence/n02/smoke_result.json",
+      "sha256": "2bc4cfbdf9e3099cf6c88837912d5d9e557cf857a9fe2d4b7075a874db79c6e7",
+      "passed": true,
+      "wall_s": 22.374013758962974,
+      "native_reasons": [
+        "invalid grasp command identity/schema"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n03": {
+      "receipt": "evidence/n03/smoke_result.json",
+      "sha256": "0717c325d70415a95cb1928f8a13c90e2cab4143ecceca20bca8046c3d8bfd76",
+      "passed": true,
+      "wall_s": 22.316898020915687,
+      "native_reasons": [
+        "invalid grasp command identity/schema"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n04": {
+      "receipt": "evidence/n04/smoke_result.json",
+      "sha256": "768cb8cd051f1d563cd4e2c79d0e2d087c2544a7437556630e0b0ad4669025ad",
+      "passed": true,
+      "wall_s": 22.377599997911602,
+      "native_reasons": [
+        "[json.exception.parse_error.101] parse error at line 1, column 161: syntax error while parsing value - invalid literal; last read: '\"arm_target_rad\":[N'"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n05": {
+      "receipt": "evidence/n05/smoke_result.json",
+      "sha256": "27d30861fc62a2d64980511b0938b7f02dff56f3d9a75a384735f51153c9a959",
+      "passed": true,
+      "wall_s": 22.432663378072903,
+      "native_reasons": [
+        "EE motor target outside core calibrated limits"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n06": {
+      "receipt": "evidence/n06/smoke_result.json",
+      "sha256": "78ab464d0788d7c7dad6a696e9bd28f746246738a4938c98112db55867137fc1",
+      "passed": true,
+      "wall_s": 22.375851851888,
+      "native_reasons": [
+        "dynamic pregrasp path violates native start/joint/step/speed limits"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n07": {
+      "receipt": "evidence/n07/smoke_result.json",
+      "sha256": "a4bdf6364a7bf725c6aa6cc9fc20601cbe680a27dbd928b4b544a56756a02e66",
+      "passed": true,
+      "wall_s": 25.33306557801552,
+      "native_reasons": [
+        "backend response timeout"
+      ],
+      "active_ticks": [
+        null
+      ]
+    },
+    "n08": {
+      "receipt": "evidence/n08/smoke_result.json",
+      "sha256": "6dced45800dfdf97ec32a9f5da6d7b8c42a5cf19a1491ac2ee6eda3430ed2968",
+      "passed": true,
+      "wall_s": 22.39648416102864,
+      "native_reasons": [
+        "unsolicited backend command"
+      ],
+      "active_ticks": [
+        null
+      ]
+    }
+  },
+  "natural_run": {
+    "receipt": "evidence/t02/smoke_result.json",
+    "active_ticks": 1124,
+    "wall_s": 11.664963526884094,
+    "termination": "ik_failure_limit",
+    "phase_counts": {
+      "close_1": 870,
+      "lift_2": 254
+    },
+    "last_ik": {
+      "position_error_m": 0.0026115363241911347,
+      "rotation_error_rad": 0.04120522943712974,
+      "rotation_limit_rad": 0.04
+    },
+    "iteration": {
+      "configured_grasp_pose_generator": {
+        "enabled": true
+      },
+      "effective_model_grasp_pose_generator": {
+        "configured_enabled": true,
+        "enabled": true,
+        "authorization_source": "episode_config",
+        "registry_joint_intervention_allowed": false,
+        "execution_override_of_registry_flags": true,
+        "qualification_metadata_unchanged": true
+      },
+      "registry_failure_trigger_allowed": false,
+      "registry_pose_intervention_allowed": false,
+      "failure_alarm_ticks": 0,
+      "failure_reasons": {
+        "before_contact_admission": 110,
+        "unqualified_candidate_shadow_score": 203,
+        "cadence_wait": 811
+      },
+      "proposal_outputs": 0,
+      "proposal_statuses": {},
+      "proposal_abstentions": 0,
+      "retarget_executed_proposals": 0,
+      "reentry_events": 0,
+      "phase_counts": {
+        "1.0": 870,
+        "2.0": 254
+      },
+      "pose_model_calls": 0,
+      "retarget_executed": false,
+      "simulation_physical_hold": {
+        "scope": "nonreal_completion_only_independent_audit_required",
+        "valid": true,
+        "eligible": false,
+        "qualified": false,
+        "world_time_s": 46.134000000038256,
+        "sample_ns": 2015086947352041,
+        "start_world_s": null,
+        "duration_world_s": 0.0,
+        "reason": "physical_conditions_not_met",
+        "clearance_m": 0.05427152865161111
+      },
+      "independent_grasp_success": null
+    },
+    "hold_success": false,
+    "independent_grasp_success": null
+  },
+  "model_execution": {
+    "GPG_explicit_config_enabled": true,
+    "registry_flags_overridden": true,
+    "qualification_metadata_changed": false,
+    "natural_alarm_ticks": 0,
+    "natural_pose_calls": 0,
+    "offline_trigger": "synthetic FAILURE_FIRST_CROSSING on recorded ticks107..110",
+    "actor_candidates_projected": 6,
+    "selected_candidate_index": 2,
+    "natural_recovery_success_claimed": false
+  },
+  "synthetic_timing": {
+    "ipc_2000": {
+      "samples": 2000,
+      "roundtrip_ms_p50": 7.0999265008140355,
+      "roundtrip_ms_p95": 10.294206521939486,
+      "roundtrip_ms_max": 36.77349101053551
+    },
+    "ipc_2000_ten_ms_deadline_missed_count": 232,
+    "sustained_100Hz_pass": false,
+    "ipc_30": {
+      "case": "normal",
+      "samples": 30,
+      "elapsed_s": 0.2939272259827703,
+      "roundtrip_ms_p50": 3.7036649882793427,
+      "roundtrip_ms_p95": 5.02935295808129,
+      "roundtrip_ms_max": 6.491350010037422,
+      "schedule_lateness_ms_max": 0.0725179980508861,
+      "termination_reason": "episode_time_budget",
+      "backend_exited_after_eof": true,
+      "socket_removed": true
+    },
+    "short_run_does_not_supersede_long_run": true,
+    "ipc_2000_receipt": "evidence/synthetic_smoke/ipc_2000_first_raw/normal_diagnostics.json"
+  },
+  "checks": {
+    "python": "evidence/verification/python_checks.json",
+    "python_note": "14/15 in Torch venv; plugin_config passed separately with system Python3/PyYAML",
+    "plugin_config": "evidence/verification/controller_plugin_config_system_python.json",
+    "project": "evidence/verification/project_checks.json",
+    "deployment_scene": "evidence/verification/deployment_scene_ready.log",
+    "project_note": "Initial generated-model errors retained; 8 deployment tests pass after locked submodule initialization/model generation",
+    "saved_geometry": "evidence/verification/anygrasp_geometry_run.json",
+    "runtime_terminal": "evidence/episode_audit/runtime_terminal_result.json",
+    "native_execution": "evidence/harness/execution_results.json",
+    "native_sync": "evidence/harness/sync_verification.json"
+  },
+  "D405": {
+    "report": "evidence/d405/report.json",
+    "fresh_adapter_report": "evidence/d405_fresh/report.json",
+    "all_previous_probes_passed": false,
+    "physical_fk_world_or_object_pose_measured": false,
+    "fresh_adapter_report_sha256": "f3ca51c81d1b33e0d6cba2256f7d0ee2e879ad14584e2485c49bfc6e3942b5c3",
+    "fresh_snapshot_age_s": 0.007969742,
+    "fresh_result_age_s": 0.297188624,
+    "fresh_points": 957,
+    "fresh_sequence": 35,
+    "fresh_sdk_rtt_s": 0.2858485970646143,
+    "synthetic_identity_transform": true,
+    "raw_camera_identity_preserved": true,
+    "source_config_edits": false
+  },
+  "C": {
+    "status": "complete_with_findings",
+    "receipt": "C_default_nonreal/FINAL_RECEIPT.json",
+    "receipt_sha256": "b7810cf681b417b8ed66826ec48908f08d95dc4c67e784b2f7d36166e4143fee",
+    "default_profile": "dual_arm14DOF [raipal_R,stub-0_R,raipal_L,tool-empty_L]",
+    "scope": "private install/config copy only; official source/install unchanged",
+    "existing_manifest_fix": "453b987",
+    "operating_deployment_lag": true,
+    "default_grasp_direct_load": "fails missing default-relative episode JSON; not dedicated grasp pass",
+    "captures_verified": 334,
+    "protected_files_unchanged": 185,
+    "ntfy_sent_by_C": false,
+    "final_pane_check": "evidence/C_session_final.json",
+    "complete_marker_and_idle_prompt_observed": true
+  },
+  "preserved_failures": {
+    "t04": "child discovery from non-main thread; t04b passes",
+    "n01": "job-local socket mismatch; n01b passes",
+    "N10_before": "contact gate failed; new B0 regression passes"
+  },
+  "qualification_limits": [
+    "Natural NONREAL grasp success and spontaneous learned recovery performance",
+    "Sustained 100Hz deadlines; all native cases use relaxed timing",
+    "Physical base/world/table/camera registration and actual ready/observation motion",
+    "Automatic put-down/open/ready/reposition/rearm remains accepted separate follow-up plan"
+  ],
+  "publication": {
+    "task_ref": "feat/nonreal-episode-closure-20261024",
+    "canonical_ref": "feat/grasp-episode-preparation-20261023",
+    "receipt": "evidence/publication.json",
+    "final_notification_receipt": "evidence/ntfy.json",
+    "receipt_timing": "Publication, source sync and ntfy are verified after the containing commit; external receipts avoid a self-referential commit."
+  },
+  "verification_completed_utc": "2026-10-23T18:21:46.272694+00:00"
+}

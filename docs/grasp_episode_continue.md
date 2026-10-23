@@ -1,5 +1,8 @@
 # Grasp episode 후속 준비 — 2026-10-24
 
+이후의 유한한 NONREAL 종료·오류·재파지 검사와 수정은
+[후속 검증 기록](grasp_episode_nonreal_closure.md)에 있다. 아래는 앞선 27-tick 실행의 기록이다.
+
 C의 최종 EE 변경을 합친 railab 격리 설치에서 **실제 NONREAL node + local licensed
 AnyGrasp SSH + A1/B1 에피소드**를 통과했다. 실제 로봇의 ready·관측 이동이나 grasp는
 수행하지 않았다. 이 기록은 [이전 준비 문서](grasp_episode_preparation.md)의
@@ -72,8 +75,10 @@ L arm·EE·D405·tactile 모델은 고정된 최신 L/EE URDF revision을 사용
 이는 lifecycle·transport 통합 검사다. B1으로 일찍 종료했으므로 lift/hold 성공이나
 실패 후 재제안 성능을 검증하지 않았다(`pose_model_calls: 0`,
 `independent_grasp_success: null`). 선택한 Controller/Failure는 bootstrap 미인증
-모델이며 Failure는 shadow-only, trigger 금지 상태를 유지한다. Actor/Selector도
-offline/research 상태다. relaxed timing으로 수행했으므로 실기 deadline 보장이 아니다.
+모델이며 registry의 Failure shadow-only·trigger 금지, Actor/Selector offline/research
+메타데이터는 유지했다. 다만 episode의 `grasp_pose_generator.enabled=true`가
+재제안 실행을 명시적으로 허용한다. 27 tick에서 미호출이었다는 결과로 실행이
+차단됐다고 판단할 수 없다. relaxed timing으로 수행했으므로 실기 deadline 보장이 아니다.
 
 ## 설치·근거·재현
 

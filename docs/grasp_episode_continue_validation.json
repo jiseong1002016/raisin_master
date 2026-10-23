@@ -419,7 +419,15 @@
     "failure_shadow_only": true,
     "failure_trigger_allowed": false,
     "actor_selector": "offline/research; no pose calls in this smoke",
-    "independent_grasp_success": null
+    "independent_grasp_success": null,
+    "registry_metadata_unchanged": true,
+    "grasp_pose_generator": {
+      "configured_enabled": true,
+      "enabled": true,
+      "authorization_source": "episode_config",
+      "execution_override_of_registry_flags": true
+    },
+    "no_pose_call_interpretation": "27 active ticks contained no proposal; registry metadata did not disable execution"
   },
   "cleanup": {
     "existing_other_nodes_local": [],
@@ -487,5 +495,6 @@
     "evidence/C_session_prepublish.txt": "64dc71e2b40fd2b70a77d26ec4fe9ddc900aae223af1eb66a3d14698eea7b043",
     "evidence/C_session_prepublish.json": "96e0c75a7c8af43f028ba4a63b29a5a02f955e4904b021090db1fbb213628815",
     "evidence/handoff_preflight.log": "64c13178f7e671040e3e1cf85ce7f7e3cc514b6e718b77a731fd23090326153e"
-  }
+  },
+  "successor": "grasp_episode_nonreal_closure_validation.json; this receipt remains the earlier 27-tick run"
 }
