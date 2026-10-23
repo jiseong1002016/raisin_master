@@ -15,9 +15,102 @@ Sequence::Config config() {
 Sequence::Readback readback(Sequence::TimePoint now, Sequence::Target position = {}) {
   return {position, {true, true}, {now, now}, {false, false}};
 }
+void testCoupledMotion() {
+  const Sequence::TimePoint origin{};
+  for (std::size_t lead = 0; lead < 2; ++lead) {
+    const auto follow = 1 - lead;
+    for (double relative : {0.743, 0.05}) {
+      auto coupled = config();
+      coupled.lower_limit_rad[lead] = 0.;
+      coupled.upper_limit_rad[lead] = 0.96;
+      coupled.lower_limit_rad[follow] = -0.96;
+      coupled.upper_limit_rad[follow] = 0.;
+      coupled.first_test_axis = lead;
+      coupled.max_relative_angle_rad = relative;
+      const auto feasible = [&](const Sequence::Target& point) {
+        for (std::size_t axis = 0; axis < 2; ++axis) {
+          assert(point[axis] >= coupled.lower_limit_rad[axis] - 1.e-12);
+          assert(point[axis] <= coupled.upper_limit_rad[axis] + 1.e-12);
+        }
+        const double difference = point[lead] + point[follow];
+        assert(difference >= -1.e-12 && difference <= relative + 1.e-12);
+      };
+      for (const auto mode : {Sequence::Mode::CLOSE, Sequence::Mode::TEST,
+                              Sequence::Mode::GET_READY}) {
+        Sequence sequence(coupled);
+        Sequence::Target position{};
+        position[lead] = 0.96;
+        position[follow] = -0.96;
+        sequence.start(mode, readback(origin, position), origin);
+        auto now = origin;
+        bool openedTogether = false;
+        for (int step = 0; step < 1000 && !sequence.done() &&
+             sequence.status() != Sequence::Status::HOLD; ++step) {
+          const auto target = sequence.target();
+          for (int sample = 0; sample <= 100; ++sample) {
+            Sequence::Target interpolated{};
+            for (std::size_t axis = 0; axis < 2; ++axis)
+              interpolated[axis] = position[axis] +
+                  (target[axis] - position[axis]) * sample / 100.;
+            feasible(interpolated);
+          }
+          if (sequence.status() == Sequence::Status::TEST &&
+              target[lead] > 0. && target[follow] < 0.)
+            openedTogether = true;
+          position = target;
+          now += 20ms;
+          sequence.update(now, readback(now, position));
+          assert(!sequence.failed());
+        }
+        assert(sequence.target() == Sequence::Target{});
+        assert(sequence.done() || sequence.status() == Sequence::Status::HOLD);
+        assert(openedTogether == (mode == Sequence::Mode::TEST));
+      }
+      Sequence sequence(coupled);
+      sequence.start(Sequence::Mode::TEST, readback(origin), origin);
+      auto now = origin + 20ms;
+      sequence.update(now, readback(now));
+      for (const auto& scale : std::array<Sequence::Target, 3>{{
+               {1., 0.}, {1., -1.}, {0., 0.}}}) {
+        const double excursion = std::min(std::acos(-1.) / 6., relative);
+        const auto target = sequence.target();
+        assert(target[lead] == scale[0] * excursion);
+        assert(target[follow] == scale[1] * excursion);
+        for (int sample = 0; sample < 2; ++sample) {
+          now += 20ms;
+          sequence.update(now, readback(now, target));
+        }
+      }
+      assert(sequence.done());
+      coupled.upper_limit_rad[lead] = 0.08;
+      coupled.lower_limit_rad[follow] = -0.03;
+      Sequence narrow(coupled);
+      narrow.start(Sequence::Mode::TEST, readback(origin), origin);
+      now = origin;
+      for (int step = 0; step < 100 && !narrow.done(); ++step) {
+        feasible(narrow.target());
+        now += 20ms;
+        narrow.update(now, readback(now, narrow.target()));
+      }
+      assert(narrow.done());
+    }
+  }
+  for (double relative : {0., -0.1, std::numeric_limits<double>::infinity(),
+                           std::numeric_limits<double>::quiet_NaN()}) {
+    auto invalid = config();
+    invalid.first_test_axis = 1;
+    invalid.max_relative_angle_rad = relative;
+    bool rejected = false;
+    try { Sequence sequence(invalid); }
+    catch (const std::invalid_argument&) { rejected = true; }
+    assert(rejected);
+  }
+}
+
 }
 
 int main() {
+  testCoupledMotion();
   const Sequence::TimePoint origin{};
   Sequence::Config slowConfig{{-0.2, 0.}, {0., 0.2}, 0.01, 500ms, 10000ms, 150ms};
   slowConfig.command_velocity_rad_s = {0.02, 0.02};

@@ -1505,12 +1505,12 @@ void testLatchedCoreFaultRestart(const TemporaryDirectory& temporary) {
           "restart should permit enable only after a new explicit command");
 }
 
-void testIdentificationLeaseAndEnvelope() {
+void testIdentificationLeaseAndDefaultLimits() {
   auto config = mockConfig();
   config.identification_enabled = true;
   config.maintenance_requires_tactile = false;
   for (auto& axis : config.axes) {
-    axis.gear_ratio = 1.;
+    axis.gear_ratio = 2.;
     axis.gear_efficiency = 1.;
     axis.motor_rated_torque_nm = 1.;
     axis.kp_nm_per_rad = 5.;
@@ -1522,21 +1522,17 @@ void testIdentificationLeaseAndEnvelope() {
   bridge.tick();
   require(bridge.setHomeFromCore().success, "identification fixture home");
   bridge.setMaintenanceMode(false);
-  const std::string begin = R"({action: begin, token: fixture, duration_s: 1, axis: 0, max_displacement_rad: 0.02,
-    axes: [{kp: 5, kd: 2.5, lower_rad: -0.05, upper_rad: 0, velocity_rad_s: 0.2,
-            command_velocity_rad_s: 0.02, output_torque_nm: 0.5},
-           {kp: 5, kd: 2.5, lower_rad: 0, upper_rad: 0.05, velocity_rad_s: 0.2,
-            command_velocity_rad_s: 0.02, output_torque_nm: 0.5}]})";
+  const std::string begin = R"({action: begin, token: fixture, duration_s: 1,
+    axes: [{kp: 5, kd: 2.5}, {kp: 5, kd: 2.5}]})";
   require(YAML::Load(bridge.identify(begin))["active"].as<bool>(), "identification begin");
   require(!bridge.state().enabled, "begin never enables motors");
   requireThrows([&] { bridge.identify("{action: enable, token: stranger}"); },
                 "matching", "wrong session cannot enable");
   bridge.identify("{action: enable, token: fixture}");
   require(bridge.state().enabled, "explicit identification enable");
-  requireThrows([&] { bridge.identify("{action: target, token: fixture, target_rad: [-0.2, 0]}"); },
-                "outside", "target wrapper is enforced inside node");
-  requireThrows([&] { bridge.identify("{action: target, token: fixture, target_rad: [0, 0.01]}"); },
-                "outside", "stationary axis target cannot change");
+  bridge.identify("{action: target, token: fixture, target_rad: [-0.2, 0.01]}");
+  requireThrows([&] { bridge.identify("{action: target, token: fixture, target_rad: [-2, 0]}"); },
+                "configured EE limits", "default node position bounds remain enforced");
   require(!bridge.setHomeFromCore().success, "identification never changes home");
   require(!bridge.handleCommand(command(Action::HEARTBEAT, 10000)).success,
           "plugin heartbeat cannot renew identification lease");
@@ -1547,11 +1543,11 @@ void testIdentificationLeaseAndEnvelope() {
           "timeout restores production bounds");
   bridge.tick();
   auto invalid = YAML::Load(begin);
-  invalid["axes"][0]["lower_rad"] = -2.;
-  requireThrows([&] { bridge.identify(YAML::Dump(invalid)); }, "node limits", "cannot enlarge hard limits");
-  invalid = YAML::Load(begin);
   invalid["axes"][0]["kp"] = 101.;
-  requireThrows([&] { bridge.identify(YAML::Dump(invalid)); }, "wrist reference", "gain cap");
+  bridge.identify(YAML::Dump(invalid));
+  require(bridge.identificationActive(), "identification has no extra gain cap");
+  bridge.identify("{action: end, token: fixture}");
+  invalid = YAML::Load(begin);
   invalid["axes"][0]["kp"] = std::numeric_limits<double>::quiet_NaN();
   requireThrows([&] { bridge.identify(YAML::Dump(invalid)); }, "nonfinite", "NaN gain");
   bridge.identify(begin);
@@ -1638,7 +1634,7 @@ int main() {
     testCalibrationFingerprint(temporary);
     testMultiturnFeedbackRecovery(temporary);
     testLatchedCoreFaultRestart(temporary);
-    testIdentificationLeaseAndEnvelope();
+    testIdentificationLeaseAndDefaultLimits();
     std::cout << "EE PDO and bridge safety tests passed\n";
     return 0;
   } catch (const std::exception& error) {

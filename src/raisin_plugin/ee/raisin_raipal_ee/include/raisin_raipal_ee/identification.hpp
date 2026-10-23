@@ -13,11 +13,6 @@ namespace raisin::raipal_ee {
 struct IdentificationAxis {
   double kp{};
   double kd{};
-  double lower{};
-  double upper{};
-  double velocity{};
-  double command_velocity{};
-  double output_torque{};
 };
 
 inline std::array<IdentificationAxis, 2> readIdentificationAxes(const YAML::Node& node) {
@@ -26,20 +21,14 @@ inline std::array<IdentificationAxis, 2> readIdentificationAxes(const YAML::Node
   std::array<IdentificationAxis, 2> result;
   for (std::size_t index = 0; index < result.size(); ++index) {
     const auto item = node[index];
-    detail::requireOnlyKeys(item, {"kp", "kd", "lower_rad", "upper_rad",
-                                 "velocity_rad_s", "command_velocity_rad_s", "output_torque_nm"});
+    detail::requireOnlyKeys(item, {"kp", "kd"});
     auto& axis = result[index];
-    axis = {item["kp"].as<double>(), item["kd"].as<double>(), item["lower_rad"].as<double>(),
-            item["upper_rad"].as<double>(), item["velocity_rad_s"].as<double>(),
-            item["command_velocity_rad_s"].as<double>(), item["output_torque_nm"].as<double>()};
-    for (double value : {axis.kp, axis.kd, axis.lower, axis.upper, axis.velocity,
-                         axis.command_velocity, axis.output_torque}) {
+    axis = {item["kp"].as<double>(), item["kd"].as<double>()};
+    for (double value : {axis.kp, axis.kd}) {
       if (!std::isfinite(value)) throw std::invalid_argument("nonfinite identification parameter");
     }
-    if (axis.kp < 0. || axis.kp > 100. || axis.kd < 0. || axis.kd > 5. ||
-        axis.lower >= axis.upper || axis.velocity <= 0. || axis.command_velocity <= 0. ||
-        axis.command_velocity > axis.velocity || axis.output_torque <= 0.)
-      throw std::invalid_argument("invalid identification envelope or gains (wrist reference P<=100,D<=5)");
+    if (axis.kp < 0. || axis.kd < 0.)
+      throw std::invalid_argument("identification gains must be nonnegative");
   }
   return result;
 }
