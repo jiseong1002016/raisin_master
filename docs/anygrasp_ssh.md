@@ -4,16 +4,18 @@ railab의 SDK 폴더는 RGBD에서 얻은 XYZ/RGB를 SSH로 local에 보내고 g
 받는다. 기존 라이선스·SDK·checkpoint는 local에 둔다. 카메라 촬영, 좌표 변환,
 후보의 IK·경로 검사, joy와 에피소드 제어는 railab의 기존 경로를 사용한다.
 
-이번에 로봇 노드나 장치를 시작하지 않았다. 저장된 rayrai 관측의 실제 SDK 추론과
-장치 없는 backend 준비 검사만 확인했다. 실기 사용 조건은
-[에피소드 준비 문서](grasp_episode_preparation.md)의 실측·장치·C 세션 조율 항목을 따른다.
+저장 RGBD·backend 준비에 이어 새 통합 설치의 **실제 NONREAL node + SSH SDK +
+A1/B1 episode**도 통과했다. 최신 결과·재현 경로와 실기 미검증 범위는
+[후속 준비 기록](grasp_episode_continue.md)을 따른다. 실제 로봇·D405 장치는 열지 않았다.
 
 ## 설치된 폴더
 
 - railab: `/home/raipal/workspace/jiseong/isolation/anygrasp_remote_20261024/sdk`
 - local worker: `/home/jiseong/raisim_ws/isolation/anygrasp_remote_20261024/sdk_local`
-- 새 코드·모델 bundle: 두 기기의 `isolation/anygrasp_remote_20261024/inference_bundle`
-- railab 설정 생성 결과: 같은 작업 경로의 `nonreal_prepared/episode.json`
+- 최신 통합 설치·bundle: railab `isolation/episode_continue_20261024/master/install`,
+  두 기기의 같은 작업 root 아래 `inference_bundle_002`.
+- 최초 SSH 준비의 bundle·설정: `isolation/anygrasp_remote_20261024/inference_bundle`,
+  같은 작업 root의 `nonreal_prepared/episode.json` (역사적 준비 검사).
 
 SDK 폴더에는 `check`, `anygrasp.py`, `anygrasp_ssh.py`, `anygrasp.json`, `ssh_config`,
 `known_hosts`, 전용 `identity`와 공개키가 있다. client 쪽 native SDK·CUDA·라이선스는
@@ -43,7 +45,7 @@ base=/home/raipal/workspace/jiseong/isolation/anygrasp_remote_20261024
 ```
 
 에피소드 launcher에는 다음 인자를 추가한다. 기존 source·plant·observation plan
-선택은 유지한다. 이번 준비는 `--prepare-only`로 수행했다.
+선택은 유지한다. `--prepare-only`는 node 없이 설정을 생성한다.
 
 ```bash
 --anygrasp-config /home/raipal/workspace/jiseong/isolation/anygrasp_remote_20261024/sdk/anygrasp.json
@@ -66,10 +68,10 @@ old=/home/raipal/workspace/jiseong/isolation/episode_completion_20261023
   --b0-library "$old/master/install/lib/libraisin_grasp_b0.so" --check
 ```
 
-기존 격리 native 설치·policy venv는 읽어서 재사용하고, 새 controller Python·bundle·
-HOME·cache·결과는 새 작업 경로에 둔다. 기존 bundle003과 운영 prefix는 수정하지
-않았다. 새 native build가 필요한 변경은 없다. 일반 운영 설치가 이 설정을 자동으로
-선택하는 것은 아니며 위 새 경로를 지정해야 한다.
+위 명령은 최초 SSH 준비의 backend 검사다. 최신 전체 node 검사는 C 변경을 통합한
+새 native prefix와 bundle을 사용한다. 기존 bundle003과 운영 prefix는 보존했다.
+일반 운영 설치가 이 설정을 자동으로 선택하는 것은 아니므로 사용할 SDK config와
+호환되는 source·prefix·bundle을 명시한다.
 
 ## 입력·오류·시간
 
@@ -87,7 +89,7 @@ SSH는 한 번 준비한 worker를 재사용한다. 64–12,000개의 유한한 
 직렬화·전송·추론·반환까지 경과한 시간을 검사한다. A1 후의 별도 geometry 재검증과
 고정된 최초 G0도 유지한다. 100 Hz 제어 요청은 이 SSH 경로를 거치지 않는다.
 
-## 검증 결과와 범위
+## 최초 저장 RGBD 검사와 범위
 
 - 공유 AnyGrasp 회귀 검사 12개, launcher 설정 검사 7개 통과.
 - 새 bundle 96개 파일의 hash를 railab에서 확인했다. source Git 상태는 clean이다.
@@ -98,9 +100,10 @@ SSH는 한 번 준비한 worker를 재사용한다. 64–12,000개의 유한한 
   `setup_required`를 반환했다. 해당 시도에 pose fallback은 없다.
 - SDK 폴더 위치와 호출 작업 디렉터리를 바꾼 warmup 통과. SSH·SDK worker 종료 확인.
 
-이 수치는 저장된 한 관측의 연결·실제 추론 확인이며, 다른 장면의 지연 보장이나
-실제 D405 취득·로봇 grasp 성공·새 transport의 전체 node episode 검증은 아니다.
-공용 장치 사용과 실제 에피소드는 별도로 조율해야 한다.
+이 수치는 저장된 한 관측의 연결·실제 추론 확인이다. 후속 전체 node 검사는 새
+rayrai 관측 8,057점, SSH 왕복 0.310초, A1 전 대기·실제 제어 27 tick·B1 종료를
+통과했다. [최신 검증 JSON](grasp_episode_continue_validation.json)을 따른다.
+어느 검사도 다른 장면의 지연, 실제 D405 취득·로봇 grasp 성공을 보장하지 않는다.
 
 정확한 source pin과 검증 파일 hash는 [검증 기록](anygrasp_ssh_validation.json)에 있다.
 주요 실행 근거는 두 기기의 작업 경로 `evidence/`에 보존했다.

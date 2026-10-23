@@ -1,0 +1,491 @@
+{
+  "schema": "grasp_episode_continue_validation_v1",
+  "date_local": "2026-10-24",
+  "created_utc": "2026-10-23T17:18:36.416583+00:00",
+  "status": "software_preparation_and_isolated_nonreal_lifecycle_passed",
+  "scope": {
+    "real_robot_opened": false,
+    "real_D405_opened": false,
+    "physical_motion_qualified": false,
+    "independent_grasp_success": null,
+    "tested_profile": "single_L_ee_nonreal",
+    "relaxed_timing": true,
+    "is_grasp_performance_evaluation": false
+  },
+  "workspaces": {
+    "local": "/home/jiseong/raisim_ws/isolation/episode_continue_20261024",
+    "railab": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024",
+    "formal_sources": "see config/raipal_sources.lock.json",
+    "operating_install_replaced_by_this_work": false
+  },
+  "sources": {
+    "ref": "feat/episode-continue-20261024",
+    "canonical_ref": "feat/grasp-episode-preparation-20261023",
+    "tested_commits": {
+      "master": "1e79246a978b7b45ae752782e895442d0ed39523",
+      "robot": "c11e2af919b78d50eff8ac771012387f0fa75e34",
+      "controller": "24db04767f724d870616a45106c6f69c33f233e6",
+      "project": "c4b8df8e6480996885240196829b2bf25ba0ffb7"
+    },
+    "published_sources": {
+      "master": "containing commit; docs/lock only after tested master revision",
+      "src/raisin_raipal": "c11e2af919b78d50eff8ac771012387f0fa75e34",
+      "src/raipal_controller": "24db04767f724d870616a45106c6f69c33f233e6",
+      "grasp_iteration": "332b69a8ce0bd3bde2d264363ce5d45bf28410e7"
+    },
+    "project_changes_after_bundle": [
+      "docs/deployment_preparation.md",
+      "docs/portable_execution.md"
+    ],
+    "model_urdf_revision": "4b313b7e81733dab29cf1855ec93f26c6a8f10a3",
+    "dependencies": "evidence/dependency_source_snapshot.json; preserved source bytes including pre-existing modified dependency inputs, not a clean-clone rebuild claim"
+  },
+  "C_integration": {
+    "preservation_commits": {
+      "master": "ef36ab8",
+      "robot": "30ad528",
+      "controller": "d79647e"
+    },
+    "final_EE_excursion_rad": 0.5235987755982988,
+    "other_profiles_excursion_rad": 0.2,
+    "session_check": {
+      "checked_utc": "2026-10-23T17:17:29.704171+00:00",
+      "pane": "%6",
+      "identity": "x870-grasp_iteration-C %6 node /home/jiseong/raisim_ws/grasp_iteration",
+      "completion_shown": true,
+      "idle_prompt_shown": true,
+      "physical_30deg_trial_reported": false,
+      "capture_file": "C_session_prepublish.txt",
+      "capture_sha256": "64dc71e2b40fd2b70a77d26ec4fe9ddc900aae223af1eb66a3d14698eea7b043",
+      "messages_sent": false
+    },
+    "physical_30deg_trial_performed": false
+  },
+  "table": {
+    "config": "grasp_iteration:configs/deployment_preparation.yaml",
+    "height_comment": "height of railab sliding table",
+    "top_z_m": 0.78,
+    "full_support_size_xy_m": [
+      0.7,
+      0.44
+    ],
+    "proposed_source_world_center_xy_m": [
+      0.0,
+      0.6
+    ],
+    "object_center_xy_m": [
+      0.0,
+      0.55
+    ],
+    "native_wall_thickness_m": 0.012,
+    "native_inner_support_size_xy_m": [
+      0.676,
+      0.416
+    ],
+    "native_floor_size_xy_m": [
+      0.7,
+      0.44
+    ],
+    "measured_base_world_registration": false,
+    "physical_ready_or_observation_tried": false,
+    "training_defaults_changed": false,
+    "source_scene": {
+      "source_top_z_m": 0.3,
+      "top_z_m": 0.78,
+      "center_xy_w_m": [
+        0.0,
+        0.6
+      ],
+      "size_xy_m": [
+        0.7,
+        0.44
+      ],
+      "placement_provenance": "configured staging geometry; not physically measured"
+    },
+    "object_centered_pose": {
+      "position_w_m": [
+        0.0,
+        0.55,
+        0.830901125
+      ],
+      "quaternion_wxyz": [
+        0.9902680687415704,
+        0.0,
+        0.0,
+        -0.13917310096006544
+      ]
+    }
+  },
+  "build": {
+    "final_stages": [
+      {
+        "stage": "build",
+        "argv": [
+          "nice",
+          "-n",
+          "10",
+          "cmake",
+          "--build",
+          "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/build",
+          "-j2"
+        ],
+        "exit": 0,
+        "wall_s": 32.07614105893299
+      },
+      {
+        "stage": "install",
+        "argv": [
+          "cmake",
+          "--install",
+          "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/build"
+        ],
+        "exit": 0,
+        "wall_s": 0.07832857896573842
+      }
+    ],
+    "clang_tidy_enabled": false,
+    "copied_vendor_runtime": [
+      {
+        "name": "libsoem.so",
+        "source": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/master/install/lib/libsoem.so",
+        "target": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install/lib/libsoem.so",
+        "sha256": "e8889545dac3abdc21770777bc60f67da643439c7405ce5bf937a405ba867c63"
+      },
+      {
+        "name": "libraisin_svt_av1.so.0",
+        "source": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/master/install/lib/libraisin_svt_av1.so.0",
+        "target": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install/lib/libraisin_svt_av1.so.0",
+        "sha256": "b22a6bec4196a7b5cd4ad7eaab7054f214094465b7f5349500b724ddcc2d4e7d"
+      },
+      {
+        "name": "libimplot.so",
+        "source": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/master/install/lib/libimplot.so",
+        "target": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install/lib/libimplot.so",
+        "sha256": "0a70e9fb7cfe196692ea2cb80619d245cf3e2d7b97a57e246cefab48485ae67d"
+      },
+      {
+        "name": "libSDL2-2.0.so.0",
+        "source": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/vendor/sdl2/lib/libSDL2-2.0.so.0.3000.12",
+        "target": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install/lib/libSDL2-2.0.so.0",
+        "sha256": "3f08a99dc56e7a23f9aba231fdb92b87bee5f89ff3ca8ae169a5648f9694c1f5",
+        "source_revision": "8236e01a9f758d15927624925c6043f84d8a261f"
+      }
+    ],
+    "SDL_source_revision": "8236e01a9f758d15927624925c6043f84d8a261f",
+    "SDL_version": "2.30.12",
+    "runtime_dependencies": {
+      "LD_LIBRARY_PATH": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install/lib:/home/raipal/workspace/jiseong/raisim_sdks/raisim2Lib_v294/raisim/lib:/home/raipal/workspace/jiseong/raisim_sdks/raisim2Lib_v294/rayrai/lib:/home/raipal/workspace/jiseong/raisim_sdks/raisim2Lib_v294/raisim/lib/openusd",
+      "elf_files": 83,
+      "environment_contract": "exact node_ssh_005 namespace launch environment; not standalone relocation",
+      "escaped_framework": 0,
+      "missing_dependencies": 0,
+      "old_runtime_dependencies_preserved": true,
+      "old_runtime_dependencies_sha256": "f35cda56f1a91c2bc8dbfbee1bcc2814f39bef4ad11a0f313bf3a456a657b1f3",
+      "sdl_sha256": "3f08a99dc56e7a23f9aba231fdb92b87bee5f89ff3ca8ae169a5648f9694c1f5"
+    },
+    "standalone_DSO_relocation_qualified": false
+  },
+  "checks": {
+    "ctest_passed": 13,
+    "ctest_total": 13,
+    "ctest_names": [
+      "raipal_robot_parameters",
+      "ee_raipal_ee_mechanics",
+      "raipal_observation_qualification_check",
+      "raipal_episode_start_gate_check",
+      "raipal_start_trajectory_check",
+      "tactile_contract",
+      "tactile_usb_protocol",
+      "tactile_v2_pipeline",
+      "tactile_shadow",
+      "ee_maintenance_sequence",
+      "ee_core_contract",
+      "ee_core_pdo",
+      "ee_hardware_profile"
+    ],
+    "maintenance_hold_cases": 20,
+    "joint_ready_trajectory_and_installed_parameter_load": "passed; exact checks in evidence/verification/device_free/summary.json",
+    "source_reset_D2": {
+      "schema": "d2_source_pregrasp_qualification_v1",
+      "passed": [
+        true
+      ],
+      "q_within_urdf_joint_limits": [
+        true
+      ],
+      "native_jaw_receipt": [
+        [
+          1.0,
+          0.0,
+          1.0,
+          1.0,
+          -0.96,
+          0.96,
+          -0.96,
+          0.96,
+          1.0,
+          -0.96,
+          0.96,
+          1.0,
+          1.0,
+          0.0,
+          1e-06
+        ]
+      ],
+      "exact_no_contact": [
+        true
+      ],
+      "intended_contact_only": [
+        false
+      ],
+      "unrelated_contact_free": [
+        true
+      ],
+      "open_jaw_valid": [
+        true
+      ],
+      "runtime_penetration_hard_cap_m": 0.04,
+      "intended_contact_penetration_limit_m": 0.005,
+      "qualification_attempts_per_env": 1,
+      "native_collision_query_count": [
+        1.0
+      ],
+      "native_collision_query": "world.integrate1 broad/narrow-phase query; no dynamics integration",
+      "qualification_dynamics_steps": 0,
+      "q_source": "native guard pre-fallback slots[4:11]"
+    },
+    "ready_front_plan": {
+      "duration_s": 7.55,
+      "qualification": {
+        "collision_and_path_checked": true,
+        "nonreal_only": true,
+        "real_robot_qualified": false,
+        "ready_arm_q7": [
+          1.15750889,
+          2.24842906,
+          -2.07839271,
+          -0.93261472,
+          -1.44452311,
+          -0.78707692,
+          1.73540899
+        ],
+        "finger_rad2": [
+          -0.96,
+          0.96
+        ],
+        "gripper_q8": [
+          -0.96,
+          -0.384,
+          0.384,
+          -0.96,
+          0.96,
+          0.384,
+          -0.384,
+          0.96
+        ],
+        "sample_dt_s": 0.01,
+        "sample_count": 756,
+        "peak_speed_radps": 0.2996756187712937,
+        "peak_acceleration_radps2": 0.12222007888188896,
+        "native_result": {
+          "accepted": true,
+          "samples": 756,
+          "scope": "source_L_arm_EE_vs_configured_scene; self_collisions_source_excluded; other_arm_and_unobserved_obstacles_not_qualified"
+        },
+        "path_check_library": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024/master/install/lib/libraisin_grasp_b0.so",
+        "path_check_library_sha256": "5a9f3ab4b1eaea435482e98051639ada0d6548dd08ccda32ec5ddd1b186a448f",
+        "collision_query": "world.integrate1 at <=10ms samples; zero dynamics; no node/device",
+        "continuous_collision_proof": false,
+        "physical_registration_verified": false
+      }
+    },
+    "handoff_preflight": {
+      "exit_code": 0,
+      "node_started": false,
+      "sdk_opened": false,
+      "command": "exact bash block in grasp_episode_continue.md; no --execute"
+    }
+  },
+  "bundle": {
+    "path": "inference_bundle_002",
+    "file_count": 97,
+    "receipt_sha256": "bc5786c8ca7a633ca17a0fbecbab8619ffe8d325553308fda16ad84f5c1e3eed",
+    "source_git": {
+      "dirty": false,
+      "revision": "c4b8df8e6480996885240196829b2bf25ba0ffb7",
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "registry_canonical_sha256": "e18c3b362214f6cf46bf0b94b79236bbdb6c1532535107e637adefce8fba2440",
+    "sealed_files_verified_local_remote": {
+      "all_unchanged": true,
+      "identical_receipts": true,
+      "local_verified": 97,
+      "receipt_sha256": "bc5786c8ca7a633ca17a0fbecbab8619ffe8d325553308fda16ad84f5c1e3eed",
+      "remote_verified": 97
+    }
+  },
+  "actual_sdk": {
+    "acquisition_source": "rayrai",
+    "transport": "ssh",
+    "retained_RGBD_points": 8057,
+    "request_id": 1,
+    "checkpoint_sha256": "a05c3690b95c8b65e78b1bb8a28f1d5ca96613391946e450afacae840bbcf7b2",
+    "rgbd_sha256": "cf2c9658a208f9177706b5ae7b46c5f1d65df6434163be93a75caee895ba7a3c",
+    "transport_rtt_s": 0.3102650251239538,
+    "result_age_s": 0.401099109,
+    "candidate_count": 963,
+    "selected_candidate": {
+      "candidate_rank": 0,
+      "jaw_flip": false,
+      "score": 0.43977779150009155,
+      "width_m": 0.1
+    },
+    "pregrasp_path": {
+      "attempts": [
+        {
+          "candidate_rank": 0,
+          "jaw_flip": false,
+          "selected_mesh_support": {
+            "mesh_sha256": "dc40f635295d413884cf8e036766eb7ab09e21dc1542482934bad500e060d66d",
+            "surface_distance_m": 0.00023678329602744725,
+            "jaw_aperture_m": 0.1,
+            "orientation_evidence": false
+          },
+          "ik": {
+            "accepted": true,
+            "position_error_m": 6.137393580632165e-08,
+            "rotation_error_rad": 2.449724326509944e-06,
+            "iterations": 15,
+            "position_only": false,
+            "optimizer_converged": true,
+            "scope": "joint_limits_and_endpoint_only; collision_and_path_not_checked"
+          },
+          "native_collision": {
+            "accepted": true,
+            "samples": 777,
+            "scope": "source_L_arm_EE_vs_configured_scene; self_collisions_source_excluded; other_arm_and_unobserved_obstacles_not_qualified"
+          }
+        }
+      ],
+      "ik": {
+        "accepted": true,
+        "position_error_m": 6.137393580632165e-08,
+        "rotation_error_rad": 2.449724326509944e-06,
+        "iterations": 15,
+        "position_only": false,
+        "optimizer_converged": true,
+        "scope": "joint_limits_and_endpoint_only; collision_and_path_not_checked"
+      },
+      "native_collision": {
+        "accepted": true,
+        "samples": 777,
+        "scope": "source_L_arm_EE_vs_configured_scene; self_collisions_source_excluded; other_arm_and_unobserved_obstacles_not_qualified"
+      },
+      "duration_s": 7.76
+    },
+    "geometry_verification_age_at_handoff_s": 0.054914859,
+    "immutable_initial_proposal_age_at_handoff_s": 18.15596332,
+    "G0_reinferred_after_A1": false
+  },
+  "node_lifecycle": {
+    "passed": true,
+    "wall_s": 44.19377399003133,
+    "episode_id": "3-2012431215590159",
+    "pre_A1_hold_s": 2.029465318,
+    "A1_count": 1,
+    "active_control_ticks": 27,
+    "B1_count": 1,
+    "termination_reason": "operator_B1",
+    "post_B1_quiet_hold_s": 0.5,
+    "pose_model_calls": 0,
+    "retarget_executed": false,
+    "arm_acquisition_cadence": {
+      "source": "arm_sample_monotonic_ns",
+      "nominal_period_s": 0.01,
+      "reference_max_interval_s": 0.015,
+      "observed_intervals": 25,
+      "max_interval_s": 0.0105762,
+      "reference_deadline_misses": 0
+    },
+    "child_exit_codes": {
+      "node": -15,
+      "start": 0,
+      "joy": -15
+    },
+    "cleanup_descendant_pids": []
+  },
+  "model_limits": {
+    "controller_and_failure": "bootstrap_existing_unqualified",
+    "failure_shadow_only": true,
+    "failure_trigger_allowed": false,
+    "actor_selector": "offline/research; no pose calls in this smoke",
+    "independent_grasp_success": null
+  },
+  "cleanup": {
+    "existing_other_nodes_local": [],
+    "existing_other_nodes_remote": [],
+    "local_task_workers_remaining": 0,
+    "remote_task_workers_remaining": 0
+  },
+  "remaining_real_qualification": [
+    "Measured base/world/table registration, visibility and obstacles",
+    "Actual-current-pose to ready and front path, including self/other-arm clearance",
+    "EE homing/enabling and tactile pad/baseline checks",
+    "Observable 6-DoF registration for selected mesh; default cylindrical can yaw is rejected",
+    "Independent grasp success and trained model qualification",
+    "Put-down/open/ready/reposition/rearm remains the documented follow-up plan"
+  ],
+  "isolation": {
+    "namespaces": {
+      "net": "net:[4026532992]",
+      "ipc": "ipc:[4026532990]",
+      "pid": "pid:[4026532991]"
+    },
+    "device_allowlist": [
+      "core",
+      "fd",
+      "full",
+      "null",
+      "nvidia-modeset",
+      "nvidia-uvm",
+      "nvidia-uvm-tools",
+      "nvidia0",
+      "nvidiactl",
+      "ptmx",
+      "pts",
+      "random",
+      "shm",
+      "stderr",
+      "stdin",
+      "stdout",
+      "tty",
+      "urandom",
+      "zero"
+    ],
+    "root_mount": "read-only; job/run/workspace-log binds writable",
+    "SSH": "unmodified production SSHDetector and restricted local worker via job-only Unix relay, no TCP listener",
+    "no_private_keys_or_license_in_git": true
+  },
+  "evidence_files_sha256": {
+    "evidence/node_ssh_005/smoke_result.json": "1a9b3ffdd2a3825a54e7a3bf0bfe52238e1ae19aef822c0e0948e4241949174d",
+    "evidence/node_ssh_005/episodes/20261023T170615.796169Z_df2c0e466eaa/inputs_and_results.jsonl": "d6bb1c29c2dca42d66df0512fab46cd8a90d7f7af625d8c6dd082ac8f65fa2d9",
+    "evidence/node_ssh_005/episodes/20261023T170615.796169Z_df2c0e466eaa/result.json": "4db7c3ac4be3069b9f256c701d340154b484ca4037edc39c0d8616860ad9479e",
+    "evidence/harness/launch_argv_005.json": "315cd2a87c55dd53c348f73035dd10c742bf9462d6891885617c57432f8cf59b",
+    "evidence/harness/run_isolated_ssh.py": "d29db9c84ed821f6127d7bb8c847aeb13b1e24dfd5c67475e4bfe97bc5888410",
+    "evidence/harness/inside_driver.py": "d9a6245289694f875160e5ad6aa01258f5470dbf7ec8b2228d6f4ecc8f7667cd",
+    "evidence/harness/ssh_relay.py": "3c77b9234267433bbe9236ff599a2d481f14c567a41c8b4c9ca0ac83672c2829",
+    "evidence/source_start.local.json": "5c51b9f5107e88582b905050191f099b77db2c4436b13b5e5be5919ce132058a",
+    "evidence/source_start.table.json": "c3418345078aabb5fda5a30909f66539be7e18b9ba3e5c594df6297b170b40c7",
+    "evidence/source_relocation.json": "11939c714b3601cd802df04297c809f9ea2e7b61ce704de2f6f403aa2a8d65f3",
+    "evidence/front_observation_start.table.json": "dc90b5e8faaf92079a2ece656cbebafcf8774651973fb56675697060ab8ac547",
+    "evidence/verification/device_free/summary.json": "31806926eb8c506f462dddc7cd52058f494a524a3bc0cafff892678867f92ddb",
+    "evidence/final_build_result.json": "5100ce05e03aa74afe9b7c471e04283c42141d8ebdc7cc1be3c0062aeae4cbfb",
+    "evidence/vendor_runtime_copies.json": "34b025705f3a1df3e437ad49023f0dbbcb3c2806b5ed2d1cc81ca5d6411bcbbd",
+    "evidence/runtime_dependencies.final.json": "f79918d52bdd9a67528d48f6d3f6968521dee321a5bdaa0a116f27d0e9ac2d7e",
+    "evidence/final_postcheck.json": "eb088f35dd60f8cf3ddc74cb0172e217712ed6cb3fd04c0154ebafa221df8742",
+    "evidence/dependency_source_snapshot.json": "bbcda4f87e439fab6f01ec2fc6e41987664850fb08caf6fd9cb1315eb06b3eab",
+    "evidence/C_session_prepublish.txt": "64dc71e2b40fd2b70a77d26ec4fe9ddc900aae223af1eb66a3d14698eea7b043",
+    "evidence/C_session_prepublish.json": "96e0c75a7c8af43f028ba4a63b29a5a02f955e4904b021090db1fbb213628815",
+    "evidence/handoff_preflight.log": "64c13178f7e671040e3e1cf85ce7f7e3cc514b6e718b77a731fd23090326153e"
+  }
+}

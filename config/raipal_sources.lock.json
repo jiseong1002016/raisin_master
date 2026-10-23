@@ -4,7 +4,7 @@
   "root_repository": {
     "fetch_url": "https://github.com/jiseong1002016/raisin_master.git",
     "upstream_url": "https://github.com/raionrobotics/raisin_master.git",
-    "ref": "feat/grasp-episode-completion-20261023",
+    "ref": "feat/episode-continue-20261024",
     "revision": "the commit containing this lock file",
     "fallback_reason": "upstream readable, account has no push permission"
   },
@@ -27,20 +27,25 @@
       "local": "/home/jiseong/raisim_ws/isolation/episode_completion_20261023",
       "railab": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023",
       "note": "Isolated source/build/install; canonical local and live railab trees were preserved."
+    },
+    "continuation": {
+      "local": "/home/jiseong/raisim_ws/isolation/episode_continue_20261024",
+      "railab": "/home/raipal/workspace/jiseong/isolation/episode_continue_20261024",
+      "note": "C source changes preserved as commits and merged into task sources; native install stays isolated. Formal Git source promotion does not replace the operating hardware install."
     }
   },
   "packages": [
     {
       "path": "src/raisin_raipal",
       "fetch_url": "https://github.com/railabatkaist/raisin_raipal.git",
-      "revision": "25fd7b2ad87d7d91a7d0a78e6a1370cab6d4ce9f",
-      "ref": "fix/grasp-workspace-install-20261023"
+      "revision": "c11e2af919b78d50eff8ac771012387f0fa75e34",
+      "ref": "feat/episode-continue-20261024"
     },
     {
       "path": "src/raipal_controller",
       "fetch_url": "https://github.com/jiseong1002016/raipal_controller.git",
-      "revision": "edc50a7110a96cc593d34bee9ce882c7f7d4d757",
-      "ref": "feat/anygrasp-ssh-20261024",
+      "revision": "24db04767f724d870616a45106c6f69c33f233e6",
+      "ref": "feat/episode-continue-20261024",
       "upstream_url": "https://github.com/railabatkaist/raipal_controller.git",
       "fallback_reason": "upstream readable, account has no push permission"
     },
@@ -102,8 +107,8 @@
     {
       "path": "grasp_iteration",
       "fetch_url": "https://github.com/jiseong1002016/grasp_iteration.git",
-      "revision": "5906718a42187f319890e1832024fe85eab29aa6",
-      "ref": "feat/anygrasp-ssh-20261024"
+      "revision": "332b69a8ce0bd3bde2d264363ce5d45bf28410e7",
+      "ref": "feat/episode-continue-20261024"
     }
   ],
   "legacy_railab_observation": {

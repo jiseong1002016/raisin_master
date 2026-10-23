@@ -1,8 +1,12 @@
-# Grasp episode 준비 — 2026-10-23
+# Grasp episode 준비 — 2026-10-24
+
+최신 상판 치수·C 변경 통합·railab 검증은
+[후속 준비 기록](grasp_episode_continue.md)을 따른다. 아래의 2026-10-23 실행 수치와
+이전 bundle·설치 경로는 해당 시점의 기록이다.
 
 2026-10-24 추가: railab에서 local의 기존 licensed SDK를 호출하는
-[AnyGrasp SSH 폴더](anygrasp_ssh.md)를 준비했다. 새 bundle과 저장된 RGBD 왕복,
-장치 없는 backend 준비 검사를 통과했다. 아래의 railab 기기용 라이선스 미등록은
+[AnyGrasp SSH 폴더](anygrasp_ssh.md)를 준비했다. 저장된 RGBD·backend 준비에 이어
+새 통합 설치의 전체 NONREAL node·joy 종료도 통과했다. 아래의 railab 기기용 라이선스 미등록은
 기존 직접 SDK 실행 경로의 결과이며, 새 SSH 경로는 local에서 추론한다.
 
 물체 선택 → 관측 자세 → RGBD/AnyGrasp → 검증된 pregrasp → joy A1 →
@@ -47,8 +51,9 @@ nonreal의 geometry 검사는 알려진 mesh와 source orientation을 전제로 
 
 실기에는 다음 근거가 더 필요하다.
 
-- 실제 table XY·유효 면적·base/world 정합과 최근 camera 설정의 실측 확인자료.
-  현재 0.78 m profile의 XY/면적은 합성 설정이다.
+- 사용자가 지정한 상판은 0.70 × 0.44 m, 높이 0.78 m다. 중심 `[0, 0.60]` m와
+  물체 XY `[0, 0.55]` m는 모델 world의 제안값이며, 실제 base/world 정합과 최근
+  camera 설정의 실측 확인자료가 더 필요하다. ready·관측 자세는 실제에서 시험한 적이 없다.
 - 실제 현재 자세 → ready 경로와 주변 장애물·다른 팔까지 포함한 검사.
   ready → front의 샘플 검사는 이 구간이나 연속 충돌 무발생을 증명하지 않는다.
 - 두 tactile pad 식별·baseline, EE homing·enable·구동 제한, 독립적인 실기 성공 판정.
@@ -114,7 +119,8 @@ workspace setup을 사용하며 `RAISIN_GENERATED_INCLUDE`로 별도 생성 경�
 측정된 물체 정보나 AnyGrasp 결과가 아니다. 기존 학습 catalog와 학습 테이블 높이는
 변경하지 않고 deployment export에만 0.78 m를 적용한다. 코드 주석은
 `height of railab sliding table`이다. 기본 물체 XY는 `[0, 0.55]` m,
-support 중심은 `[0, 0.60]` m, 내부 바닥은 `0.4 × 0.4` m다.
+support 중심은 `[0, 0.60]` m, 전체 상판은 `0.70 × 0.44` m다. 높이·배치의 기본값은
+grasp_iteration의 `configs/deployment_preparation.yaml`에서 읽는다.
 
 local에서 선택 목록만 확인하는 명령은 native 환경을 로드하지 않는다.
 
@@ -125,9 +131,11 @@ python src/raipal_controller/raisin_raipal_grasp_controller/scripts/export_start
 
 `--scene-index N` 또는 `--object-id ID`로 선택한다. export 시
 `--object-xy-m X Y`, `--support-center-xy-m X Y`, `--support-size-xy-m X Y`로
-측정한 물체 중심과 테이블의 유효 바닥 면적을 반영할 수 있다. 좌표는 **source world**
+측정한 물체 중심과 테이블의 전체 상판 치수를 반영할 수 있다. 좌표는 **source world**
 기준이며 실제 base와 source world의 고정 변환을 먼저 맞춰야 한다.
-support size는 source bucket의 내부 바닥 XY이고, 기존 wall 두께는 외곽에 더해진다.
+support size는 전체 상판 XY다. deployment materialize가 native wall 두께를 한 번 빼
+내부를 `0.676 × 0.416` m로 만들므로 native floor와 exported support가 모두
+정확히 `0.70 × 0.44` m가 된다. 학습 catalog의 기존 내부 치수는 유지한다.
 source environment의 ready pose도 함께 검토한다. 기존 bucket의 벽·lip 설정까지
 실제 테이블과 같은 것으로 간주하면 안 된다.
 
@@ -300,7 +308,8 @@ backend `--check`는 카메라 없이 모델과 AnyGrasp warmup을 검사한다.
 ## 제어기·joy·종료 흐름
 
 real 기본 profile은 `single_L_ee`, nonreal은 `single_L_ee_nonreal`이다.
-기존 `dual_arm_left_ee`도 지원하고 R arm은 측정 자세를 유지한다.
+동적 AnyGrasp 준비의 기본 경로는 single L 7-DOF다. 기존 `dual_arm_left_ee`는
+별도 검증한 legacy 관측 왕복 plan이 필요하며 R arm은 측정 자세를 유지한다.
 7/14 DOF를 명시적으로 검사하며 실행 중 DOF 변경을 거부한다.
 start utility는 CSV에 R/L 14개 관절 좌표를 명시해 7개 관절 템플릿의 L mirroring을
 피한다. single-L rest override는 기존 right-arm 템플릿 좌표로 직렬화한다.
