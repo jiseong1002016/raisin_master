@@ -4,7 +4,7 @@
   "root_repository": {
     "fetch_url": "https://github.com/jiseong1002016/raisin_master.git",
     "upstream_url": "https://github.com/raionrobotics/raisin_master.git",
-    "ref": "feat/grasp-episode-preparation-20261023",
+    "ref": "feat/grasp-episode-completion-20261023",
     "revision": "the commit containing this lock file",
     "fallback_reason": "upstream readable, account has no push permission"
   },
@@ -22,20 +22,25 @@
       "raisin_master": "/home/raipal/workspace/jiseong/raisin_master_sources/raisin_master",
       "package_mirrors": "/home/raipal/workspace/jiseong/raisin_master_sources",
       "grasp_iteration": "/home/raipal/workspace/jiseong/grasp_iteration"
+    },
+    "completion": {
+      "local": "/home/jiseong/raisim_ws/isolation/episode_completion_20261023",
+      "railab": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023",
+      "note": "Isolated source/build/install; canonical local and live railab trees were preserved."
     }
   },
   "packages": [
     {
       "path": "src/raisin_raipal",
       "fetch_url": "https://github.com/railabatkaist/raisin_raipal.git",
-      "revision": "d2302b56f6a6fce322244b34ea30fb677b5db99e",
-      "ref": "feat/grasp-episode-preparation-20261023"
+      "revision": "25fd7b2ad87d7d91a7d0a78e6a1370cab6d4ce9f",
+      "ref": "fix/grasp-workspace-install-20261023"
     },
     {
       "path": "src/raipal_controller",
       "fetch_url": "https://github.com/jiseong1002016/raipal_controller.git",
-      "revision": "98d48619c43145db8ecb4605eb13f178d57327dc",
-      "ref": "feat/grasp-episode-preparation-20261023",
+      "revision": "1fa306620383d05fffa951a5c5c91caedb9be8e2",
+      "ref": "feat/grasp-preparation-gate-20261023",
       "upstream_url": "https://github.com/railabatkaist/raipal_controller.git",
       "fallback_reason": "upstream readable, account has no push permission"
     },
@@ -97,13 +102,13 @@
     {
       "path": "grasp_iteration",
       "fetch_url": "https://github.com/jiseong1002016/grasp_iteration.git",
-      "revision": "26761af6c756894fa776b7715fc9bb773042f4c3",
-      "ref": "feat/grasp-episode-preparation-20261023"
+      "revision": "b61960daec7b479a55a4922c20b218b68853232c",
+      "ref": "feat/grasp-episode-completion-20261023"
     }
   ],
   "legacy_railab_observation": {
     "read_only": true,
-    "note": "Existing live checkout/binaries were not modified; these are observations, not deployment pins. Full framework rebuild needs its SDK dependencies separately.",
+    "note": "Historical read-only observation from the initial audit; not deployment pins. The completion build uses a separate 2.9.4 prefix and records copied dirty dependency inputs in docs/grasp_episode_validation.json.",
     "repositories": [
       {
         "path": "/home/raipal/raisin_master",

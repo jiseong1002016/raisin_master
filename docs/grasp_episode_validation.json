@@ -1,93 +1,291 @@
 {
-  "source_lock": "../config/raipal_sources.lock.json",
+  "schema": "raipal_grasp_episode_validation_v2",
   "date": "2026-10-23",
-  "scope": "hardware-free source preparation; no real episode or long training",
-  "python": {
-    "executable": "/home/jiseong/anaconda3/bin/python",
-    "controller_checks": [
-      "real_launch_check.py",
-      "episode_trigger_command_check.py",
-      "rgbd_anygrasp_check.py",
-      "initialization_handoff_check.py",
-      "ee_coordinates_check.py",
-      "simulation_devices_check.py",
-      "pd_target_lead_check.py",
-      "controller_plugin_config_check.py",
-      "arm_model_compatibility_check.py",
-      "pose_generator_switch_check.py",
-      "episode_budget_check.py"
-    ],
-    "command_template": "<python> src/raipal_controller/raisin_raipal_grasp_controller/test/<check>",
-    "controller_result": "11 check programs passed",
-    "scene_command": "<python> -m unittest discover -s tests -p test_deployment_scene.py (cwd grasp_iteration)",
-    "scene_result": "4 tests passed",
-    "anygrasp_scope": "SDK boundary/inference outputs are injected test doubles; no trained SDK inference succeeded"
+  "source_lock": "../config/raipal_sources.lock.json",
+  "scope": "Isolated software preparation and local NONREAL lifecycle; no real-device episode or training",
+  "evidence_root": "/home/jiseong/raisim_ws/isolation/episode_completion_20261023",
+  "isolation": {
+    "canonical_local_and_live_railab_preserved": true,
+    "railab_write_root": "/home/raipal/workspace/jiseong/",
+    "node_network_pid_ipc_mount_namespaces": "private",
+    "node_dev_shm_tmp_run": "private",
+    "node_devices": "minimal dev plus five named NVIDIA rendering devices; no robot devices",
+    "sdk_worker": "existing licensed local host SDK over job-owned Unix socket; no host TCP listener",
+    "host_port_8080": "python3 PID 1944 preserved"
   },
-  "grasp_cpp": {
-    "status": "passed",
-    "sdk": "RaiSim 2.9.4",
-    "build_dir": "/home/jiseong/raisim_ws/isolation/episode_preparation_20261023/build",
-    "configure_source": "../source/CMakeLists.txt (isolated imported-framework wrapper)",
-    "targets": [
-      "raisin_raipal_grasp_controller",
-      "raisin_grasp_b0",
-      "raipal_grasp_start_episode",
-      "raipal_episode_start_gate_check",
-      "raipal_start_trajectory_check"
+  "build": {
+    "sdk": "RaiSim/rayrai 2.9.4",
+    "railab_prefix": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/master/install",
+    "local_prefix": "/home/jiseong/raisim_ws/isolation/episode_completion_20261023/local_prefix",
+    "controller_commit": "1fa306620383d05fffa951a5c5c91caedb9be8e2",
+    "source_matching_files": 197,
+    "source_snapshot": {
+      "file_count": 2633,
+      "snapshot_sha256": "2dc7b38fc338071c49a978cf7579303ba49823b56f771593a278e0fe6ec2d5bd",
+      "scope": "source/build configuration; excludes resources and binary artifacts except URDF/JSON/YAML"
+    },
+    "elf_count": 82,
+    "loader_missing": 0,
+    "framework_outside_prefix": 0,
+    "live_install_dependencies": 0,
+    "ctest_passed": 8,
+    "ctest_total": 8,
+    "ctest_scope": "Eight explicitly selected device-free tests, last executed at controller 1fa3066; unchanged test executables built at 7c05492. Not repeated for the D405-only c1947a2 change.",
+    "binary_equality": [
+      {
+        "path": "bin/raipal_grasp_start_episode",
+        "sha256": "40e87e8778053af02d022bf57df79b9a1d4bbb33c80e6797727497ebd5d83bc7",
+        "local_and_remote_equal": true,
+        "build_source_revision": "7c05492323a3da5ddb12730e57773ef51e8cfe0d"
+      },
+      {
+        "path": "lib/libraisin_raipal_grasp_controller.so",
+        "sha256": "3ffb8f025bac4603c3216a2ce45dd4217ec9799155d90f9d65e103b1ae5aeea7",
+        "local_and_remote_equal": true,
+        "build_source_revision": "1fa306620383d05fffa951a5c5c91caedb9be8e2"
+      },
+      {
+        "path": "lib/libraisin_raipal_trajectory_controller.so",
+        "sha256": "1a25e726abd9262e50149d01d39c5ae88dd156fca36af8e9ed0f7928a56c54fb",
+        "local_and_remote_equal": true,
+        "build_source_revision": "7c05492323a3da5ddb12730e57773ef51e8cfe0d"
+      },
+      {
+        "path": "lib/libraisin_d405_plugin.so",
+        "sha256": "c5998c5dc7f834872acd36afafed4cf58092bfc2928dda85de804d3a313c6034",
+        "local_and_remote_equal": true,
+        "build_source_revision": "c1947a20f5ad89624704093ee2831cf38f3e990a"
+      }
     ],
-    "command": "cmake --build <build_dir> --target <targets> -j1; ctest --test-dir <build_dir>/grasp --output-on-failure",
-    "ctest_result": "2/2 passed"
-  },
-  "camera_cpp": {
-    "status": "full plugin compile/link passed",
-    "host": "railab",
-    "build_dir": "/home/raipal/workspace/jiseong/isolation/rgbd_episode_prepare_20261023/build",
-    "command": "cmake --build <build_dir> --target raisin_d405_plugin -j1",
-    "framework_prefix": "/home/raipal/raisin_master/install (read-only SDK dependencies)",
-    "sdk_scope": "existing installed SDK, not a full 2.9.4 framework rebuild",
-    "native_render_check": {
-      "sdk": "RaiSim/rayrai 2.9.4",
-      "test": "src/raisin_plugin/raisin_d405_plugin/test/rayrai_rgbd_check.cpp",
-      "expected_front_depth_m": 0.2,
-      "actual_front_depth_m": 0.2,
-      "actual_center_rgb_u8": [
-        102,
-        0,
-        0
-      ],
-      "status": "passed"
+    "provenance": {
+      "manifest": "node_evidence/dependency_manifest.json",
+      "remote": "node_evidence/remote_source_provenance.json",
+      "local_reference": "node_evidence/local_reference_provenance.json",
+      "inherited_dirty_dependencies": "Preserved core header/installed-directory test, dongdrive CMake and GUI headers; ethercat directory and external native headers content-hashed. This is not a clean-Git-only reproducible build."
+    },
+    "master_native_commit": "c1947a20f5ad89624704093ee2831cf38f3e990a",
+    "final_audit": {
+      "path": "node_evidence/remote_refresh/final_audit_result_c1947a2.json",
+      "sha256": "77ba4f86cfe3b47c86e511848f37d8b5f03bbc2d9345b599a7aa346dd76198ba"
+    },
+    "dependency_snapshot_sha256": "349b52f2a1172f6041fbe4d2dcc0622bc10bc8895ae5f4817f4f70f3e8ddc89e",
+    "ctest_execution_controller_commit": "1fa306620383d05fffa951a5c5c91caedb9be8e2",
+    "reference_comparisons": {
+      "trees": 9,
+      "files": 406,
+      "mismatches": 0
+    },
+    "protected_prefix_files_unchanged": {
+      "local": 301,
+      "remote": 296
     }
   },
-  "tactile_cpp": {
-    "status": "sensor/plugin/USB process/GUI built, 5/5 hardware-free tests passed",
-    "evidence_dir": "/home/jiseong/raisim_ws/isolation/episode_preparation_20261023_tactile/evidence",
-    "logs": [
-      "configure.log",
-      "build.log",
-      "ctest_hardware_free.log",
-      "generated_message_check.json",
-      "source_sha256.json"
+  "python_checks": {
+    "captured_utc": "2026-10-23T07:54:12.629635+00:00",
+    "controller_commit": "071f9b136c241a84caad21686b0b9cbeadead515",
+    "checks": [
+      {
+        "name": "controller_plugin_config_check.py",
+        "returncode": 0,
+        "wall_s": 0.020864862948656082
+      },
+      {
+        "name": "real_launch_check.py",
+        "returncode": 0,
+        "wall_s": 0.06352523399982601
+      },
+      {
+        "name": "anygrasp_preparation_check.py",
+        "returncode": 0,
+        "wall_s": 0.15741301601519808
+      },
+      {
+        "name": "initialization_handoff_check.py",
+        "returncode": 0,
+        "wall_s": 0.1568141729803756
+      },
+      {
+        "name": "rgbd_anygrasp_check.py",
+        "returncode": 0,
+        "wall_s": 0.16402207600185648
+      },
+      {
+        "name": "rigid_alignment_check.py",
+        "returncode": 0,
+        "wall_s": 0.29825967899523675
+      }
     ],
-    "tests": [
-      "tactile_contract",
-      "tactile_usb_protocol",
-      "tactile_usb_backend",
-      "tactile_v2_pipeline",
-      "tactile_shadow"
-    ],
-    "generated_message_fields_match": 18,
-    "sdk_scope": "existing railab SDK advertises RaiSim 1.1.8; does not qualify full 2.9.4 workspace ABI"
+    "ee_schema_compatibility": {
+      "receipt": "node_evidence/ee_schema_95edbd4_checks.json",
+      "controller_commit": "95edbd468607089dffe06fb3752a99ffdb9500b7",
+      "passed": 3,
+      "scope": "Real/nonreal v2/v3 calibrated parity; passive/unqualified/unknown states rejected; no node/device"
+    }
   },
-  "independent_review": {
-    "blocking_integration_findings": 0,
-    "scope": "read-only A1/B1, camera freshness, initializing ACK, coordinate swap, 7/14 DOF",
-    "handoff_read": "all original 200 lines read cold; commissioning pointers, complete examples, staging-pregrasp distinction and this manifest added after feedback"
+  "bundle": {
+    "status": "sealed_readonly_inference_bundle",
+    "path": "inference_bundle_003",
+    "receipt_sha256": "2d1212e3b4595cc6c1ad2e7cb04045983afde2e71ae358034ab8e549dde96eb5",
+    "source_git": {
+      "dirty": false,
+      "revision": "b61960daec7b479a55a4922c20b218b68853232c",
+      "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "manifested_files": 95,
+    "all_manifested_files_verified": true,
+    "registry_raw_sha256": "f7aa91f3e2470c492c45bb318c3870b8e4d358226451584530ffb6c0384e24f1",
+    "registry_canonical_sha256": "e18c3b362214f6cf46bf0b94b79236bbdb6c1532535107e637adefce8fba2440",
+    "empty_lock_manifested": true,
+    "local_readonly_regression": "node_evidence/readonly_registry/verification.json",
+    "remote_readonly_regression": "node_evidence/runtime_staging/remote_receipts/readonly_registry_003.json",
+    "previous_bundle_002_preserved": true,
+    "model_qualification": "Controller/Failure bootstrap unqualified; Actor/Selector offline/research. Episode explicitly enables pose generation without changing qualification; loading and lifecycle are not grasp performance."
   },
-  "remaining_qualification": {
-    "table_078": "native reset IK/contact rejected current default footprint/ready; no deployment receipt",
-    "camera_mount": "file transforms composed; calibration_verified=false",
-    "anygrasp_warmup": "failed: ImportError libcrypto.so.1.1 missing; railab SDK not installed",
-    "hardware": "EE homing, two tactile pad identities/baselines and real grasp success not tested",
-    "deployment": "running installation unchanged; full ABI-matched build/deployment remains commissioning work"
+  "table_and_observation": {
+    "table_top_z_m": 0.78,
+    "code_comment": "height of railab sliding table",
+    "selectable_objects": 74,
+    "all_objects_qualified": false,
+    "source_receipt": "node_evidence/source_start.json",
+    "source_sha256": "4b564c3a1efc8e2a1ec7f0b98e90639b4f338fb75c40fbcf4526a725f651c837",
+    "plan": "node_evidence/front_observation_start.reproduced.json",
+    "plan_sha256": "addecf914ae1f765ffae3d385a7c7a374fbbbfcff9203fa54975c848656ea574",
+    "duration_s": 7.55,
+    "sample_dt_s": 0.01,
+    "native_samples": 756,
+    "peak_joint_speed_radps": 0.2996756187712937,
+    "nonreal_only": true,
+    "physical_registration_verified": false,
+    "scope": "Ready to front source L+EE against configured synthetic scene. Current-to-ready, other arm, unseen obstacles and continuous collision proof are not qualified."
+  },
+  "anygrasp": {
+    "local_licensed_inference": "passed on actual rayrai RGBD, followed by native candidate IK/path qualification",
+    "initial_G0": "SDK result and inference timestamp remain immutable; A1 uses an independent new geometry verification timestamp",
+    "nonreal_geometry": "Known source orientation; translation check only",
+    "real_geometry": "Bounded local rigid alignment with normalized 6DoF observability, fit quality and movement limits; default can yaw is ambiguous and rejected",
+    "raw_geometry_replay": {
+      "receipt": "sim_evidence/production_geometry_replay_001.json",
+      "unchanged_translation_delta_m": 4.4876564e-07,
+      "translated_2cm_rejected": true,
+      "clock_scope": "Frozen-clock production replay, not live freshness proof"
+    },
+    "railab_runtime": {
+      "status": "offline_staging_complete_registration_required",
+      "receipt": "node_evidence/runtime_staging/remote_receipts/readiness.json",
+      "prepared_config": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/node_evidence/runtime_staging/nonreal_prepared_003/episode.json",
+      "policy_python": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/policy_runtime/python",
+      "backend_check_exit_code": 2,
+      "backend_check_status": "setup_required",
+      "four_models_loaded": true,
+      "cpu_action_inference_executed": false,
+      "sdk_dependencies_bytes": 8426808399,
+      "combined_imports_passed": 14,
+      "cuda_initialized": false,
+      "sdk_invoked": false,
+      "machine_license_available": false,
+      "required_license_directory": "/home/raipal/workspace/jiseong/isolation/episode_completion_20261023/anygrasp_runtime/sdk/license",
+      "guard_exit_code": 78,
+      "node_or_device_launched": false,
+      "scope": "Offline resources and dependency imports; full device-querying imports, licensed SDK warmup/inference and remote node remain unexecuted; this earlier backend check does not qualify subsequent native controller changes."
+    }
+  },
+  "local_node_lifecycle": {
+    "status": "passed",
+    "receipt": "node_evidence/isolated_node_smoke_013/smoke_result.json",
+    "receipt_sha256": "bf680e8bb9f1c06af76bbb2d580365aa6aa14ff012035a163a790507aac81edf",
+    "attempts_preserved": "node_evidence/isolated_node_smoke_001 through _013",
+    "wall_s": 39.88782609900227,
+    "episode_id": "3-422293462941676",
+    "pre_A1_hold_s": 2.02974684,
+    "A1_publications": 1,
+    "B1_publications": 1,
+    "active_control_ticks": 26,
+    "termination_reason": "operator_B1",
+    "post_B1_quiet_hold_s": 0.5,
+    "measured_preparation_legs_passed": true,
+    "sdk_input_points_after_filter": 6994,
+    "selected_candidate": {
+      "candidate_rank": 0,
+      "jaw_flip": false,
+      "score": 0.43980246782302856,
+      "width_m": 0.1
+    },
+    "pregrasp_native_path_samples": 777,
+    "original_sdk_G0_preserved": true,
+    "A1_then_independent_new_geometry_capture": true,
+    "fresh_geometry_age_at_source_handoff_s": 0.051953954,
+    "arm_acquisition_cadence": {
+      "source": "arm_sample_monotonic_ns",
+      "nominal_period_s": 0.01,
+      "reference_max_interval_s": 0.015,
+      "observed_intervals": 24,
+      "max_interval_s": 0.010537954,
+      "reference_deadline_misses": 0
+    },
+    "runtime_maps_within_selected_prefix_and_sdk": true,
+    "visual_count_warning_absent": true,
+    "postcheck": "node_evidence/isolated_node_smoke_013/postcheck.json",
+    "bundle_manifested_files_reverified": 95,
+    "remaining_owned_processes": 0,
+    "host_pid1944_port8080_preserved": true,
+    "shutdown": "After the passed 0.5 s terminal hold, harness sent TERM only to its launched children/descendants and SDK bridge; node/joy exit -15 and starter exit 0.",
+    "pre_fix_cloud_receipt": "node_evidence/isolated_node_smoke_011/cloud_diagnostic.json",
+    "after_visual_transfer_cloud_receipt": "node_evidence/isolated_node_smoke_012/cloud_diagnostic.json",
+    "grasp_success_claim": false,
+    "scope": "One local isolated NONREAL episode with actual licensed SDK, simulated physics/control ticks and operator B1; no physical robot or grasp quality qualification."
+  },
+  "independent_directsim_evaluation": {
+    "receipt": "sim_evidence/verified_filtered_episode_summary.json",
+    "steps": 2000,
+    "native_done": true,
+    "score": {
+      "hold_completed_time_s": null,
+      "lost_after_completed_hold": false,
+      "outcome": "other_failure",
+      "success": false,
+      "peak_object_rise_m": 0.05854996670745871,
+      "final_object_rise_m": 0.057140915977407,
+      "peak_tcp_rise_m": 0.026271660234128857,
+      "peak_object_center_speed_mps": 0.17405708480613258,
+      "supported_duration_s": 9.559999999999999,
+      "target_hold_duration_s": 0.0,
+      "minimum_collision_bottom_clearance_m": -0.0012931805963065646,
+      "collision_table_penetration_duration_s": 0.0,
+      "valid_bilateral_control_tick_count": 1586,
+      "fresh_bilateral_sample_count": 1586,
+      "fresh_bilateral_sample_count_unit": "valid_100hz_control_ticks",
+      "bilateral_control_ticks_with_new_sensor_packet_count": 318,
+      "new_sensor_packet_resets_during_bilateral_count": 636,
+      "simultaneous_bilateral_sensor_packet_reset_count": 318,
+      "max_abs_sensor_skew_s": 0.0,
+      "collision_mesh_sha256": "dc40f635295d413884cf8e036766eb7ab09e21dc1542482934bad500e060d66d",
+      "collision_vertex_count": 66,
+      "scene_id": "train_source_pose_005_tomato_soup_can_gpg_all_dr__005_tomato_soup_can__v00__seq_000",
+      "object_id": "005_tomato_soup_can",
+      "samples": 2001
+    },
+    "scope": "Actual SDK initialized baseline direct simulator. No node was started for this separate performance evaluation."
+  },
+  "remaining_real_qualification": [
+    "C device/node slot coordination before any real launch",
+    "Measured world/table XY and usable area; recently adjusted mount source transforms agree, but this isolation has no physical calibration receipt (stored calibration_verified flag is false)",
+    "Current-to-ready and paths including other arm/unobserved obstacles",
+    "EE homing/actuation limits and two tactile-pad identity/baseline commissioning",
+    "Railab machine AnyGrasp registration; dependency staging does not grant a license",
+    "Independently measured real grasp success; current real result remains null",
+    "Post-episode put-down/open/return/rearrangement is planned in preparation guide, not automated"
+  ],
+  "rayrai_topology_regression": {
+    "receipt": "node_evidence/rayrai_cache_regression/verification.json",
+    "sha256": "53687a389a208074036573c0fe24ef6b461f99bf740636f7502b6ce468dc51d0",
+    "same_test_sha256": "15998c3063ca27f53f905621d65022f55ae723aa7bee60e42c55cb8e1523213e",
+    "old_header": "1467e316",
+    "new_header": "c1947a20f5ad89624704093ee2831cf38f3e990a",
+    "before_exit_code": 1,
+    "after_exit_code": 0,
+    "old_surviving_box_lost": true,
+    "new_boxes_preserved_and_restored": true,
+    "new_visual_count_warning": false,
+    "scope": "Same newly built test and compiler/link flags; local private namespaces with rendering-only devices; no remote GPU or device execution."
   }
 }
