@@ -8,7 +8,7 @@ function(raisin_install_without_config PROJECT_NAME)
     # Parse optional arguments, specifically NAMESPACE
     cmake_parse_arguments(ARG "" "NAMESPACE" "" ${ARGN})
 
-    install(DIRECTORY include/ DESTINATION include)
+    install(DIRECTORY include/ DESTINATION include OPTIONAL)
 
     # This command installs the targets and associates them with an export set.
     # It does NOT take a NAMESPACE argument itself.

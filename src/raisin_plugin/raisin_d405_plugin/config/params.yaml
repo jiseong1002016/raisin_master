@@ -10,8 +10,8 @@ serial: ""
 width: 640
 height: 480
 fps: 30
-roi_depth_xywh: [288, 208, 64, 64]
-# Select the object's visible region. RGBD snapshots contain <=12000 paired XYZ/RGB samples.
+# Include object boundaries for AnyGrasp; snapshots remain bounded to 12000 XYZ/RGB pairs.
+roi_depth_xywh: [0, 0, 640, 480]
 min_depth_m: 0.07
 max_depth_m: 0.5
 min_valid_pixels: 25

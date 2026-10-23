@@ -20,6 +20,7 @@ class RayraiRgbd {
     try {
       std::lock_guard lock(world);
       renderer_ = std::make_unique<RayraiWindow>(world, width, height);
+      renderer_->setAsyncMeshLoadingEnabled(false);
       camera_ = std::make_unique<Camera>();
       camera_->resizeRenderTargets(width, height);
       camera_->aspect = float(width) / height;
