@@ -1,5 +1,10 @@
 # Grasp episode 준비 — 2026-10-23
 
+2026-10-24 추가: railab에서 local의 기존 licensed SDK를 호출하는
+[AnyGrasp SSH 폴더](anygrasp_ssh.md)를 준비했다. 새 bundle과 저장된 RGBD 왕복,
+장치 없는 backend 준비 검사를 통과했다. 아래의 railab 기기용 라이선스 미등록은
+기존 직접 SDK 실행 경로의 결과이며, 새 SSH 경로는 local에서 추론한다.
+
 물체 선택 → 관측 자세 → RGBD/AnyGrasp → 검증된 pregrasp → joy A1 →
 한 에피소드 → 결과 기록·측정 자세 유지·EE STOP을 연결한다.
 현재 근거는 격리된 시뮬레이터와 새 설치본에서 얻었다. 실제 로봇 grasp 성공이나

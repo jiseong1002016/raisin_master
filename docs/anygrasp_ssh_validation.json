@@ -1,0 +1,97 @@
+{
+  "schema": "raipal_anygrasp_ssh_validation_v1",
+  "date": "2026-10-24",
+  "status": "passed",
+  "scope": "saved rayrai RGBD through real licensed SDK on local; railab prepare-only and backend --check; no robot node/device execution",
+  "source_revisions": {
+    "project": "5906718a42187f319890e1832024fe85eab29aa6",
+    "controller": "edc50a7110a96cc593d34bee9ce882c7f7d4d757"
+  },
+  "source_ref": "feat/anygrasp-ssh-20261024",
+  "source_lock": "config/raipal_sources.lock.json",
+  "local_root": "/home/jiseong/raisim_ws/isolation/anygrasp_remote_20261024",
+  "railab_root": "/home/raipal/workspace/jiseong/isolation/anygrasp_remote_20261024",
+  "tests": {
+    "shared_anygrasp": {
+      "command": "/home/jiseong/anaconda3/bin/python3.12 -m unittest discover -s tests -p test_*anygrasp*.py",
+      "passed": 12,
+      "synthetic_transport_peer": true
+    },
+    "launcher": {
+      "command": "python3 raisin_raipal_grasp_controller/test/real_launch_check.py",
+      "passed": 7,
+      "nodes_and_devices_mocked": true
+    }
+  },
+  "bundle": {
+    "files_verified": 96,
+    "source_dirty": false
+  },
+  "actual_saved_rgbd_inference": {
+    "point_count": 6994,
+    "warmup_s": 4.863235475029796,
+    "roundtrip_s": [
+      0.6123832948505878,
+      0.058909356128424406,
+      0.06184450606815517
+    ],
+    "candidate_counts": [
+      772,
+      772,
+      772
+    ],
+    "checkpoint_sha256": "a05c3690b95c8b65e78b1bb8a28f1d5ca96613391946e450afacae840bbcf7b2",
+    "source_kind": "saved_rayrai_rgbd_replay",
+    "source_file_sha256": "1c1730f3c38ba90d562e503390236b1195f0eda7e0ec3f9b45a214e0bac4d7a7",
+    "client_module": "/home/raipal/workspace/jiseong/isolation/anygrasp_remote_20261024/inference_bundle/grasp_integration/anygrasp.py"
+  },
+  "prepared_backend": {
+    "returncode": 0,
+    "status": "loaded",
+    "hardware_opened": false
+  },
+  "unreachable_local_backend": {
+    "returncode": 2,
+    "status": "setup_required",
+    "hardware_opened": false,
+    "pose_fallback": false
+  },
+  "relocation": {
+    "passed": true,
+    "different_working_directory": true
+  },
+  "cleanup": {
+    "client_and_local_worker_exited": true,
+    "local_license_unchanged": true,
+    "system_services_changed": false
+  },
+  "robot_node_started": false,
+  "robot_hardware_opened": false,
+  "real_episode_qualified": false,
+  "evidence_files_sha256": {
+    "remote_evidence/backend_offline.stderr": "5a83aca56306f176811e5a12d16726e46b761d296424e9026764097cbf347070",
+    "remote_evidence/backend_offline.json": "7c24fb40cc34e7124dc8f8a34d559bf71fa5ea2c08a7afd2557dd6bd24fbaa50",
+    "remote_evidence/backend_prepared.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remote_evidence/prepare_only.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remote_evidence/prepare_only.json": "38dac61b8a9829f12956f3ef1ed2d49583cd757ee00b9e56fa4f34e2edcd66f8",
+    "remote_evidence/shared_ssh_inference.json": "ed2f8fec32badb0d1210badb7f47c53008037bc06a8d16c15d0314a1765f87ab",
+    "remote_evidence/backend_check.json": "b815e0736623b7efd0b7a3fb7752eb3aa4f9c62f6e3208a6effe5ef4a7fc2ff5",
+    "remote_evidence/backend_check.stdout": "033a068dc6f669f41feb04c071f55bdc3cc99611857cd9989cb3a8ee454fd9b8",
+    "remote_evidence/backend_prepared.json": "d048647396f128f81149d6061ff3b36fc4e8bbf7abc6d8716aa4a017f9c33671",
+    "remote_evidence/relocation_check.json": "fae2849c62d55063f4eb7a04448cadf8dc790276079b5a48a4a7d69d6f542dd7",
+    "remote_evidence/backend_prepared.stdout": "033a068dc6f669f41feb04c071f55bdc3cc99611857cd9989cb3a8ee454fd9b8",
+    "remote_evidence/captured_rgbd.npz": "1c1730f3c38ba90d562e503390236b1195f0eda7e0ec3f9b45a214e0bac4d7a7",
+    "remote_evidence/backend_check.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remote_evidence/backend_offline.stdout": "e3d4bcbdf812b33ff493ec5c134442789c897e36d568e3f7a9328dd75327cd90",
+    "remote_evidence/prepare_only.stdout": "da1a8ac547678ed521dacd89039253a500369fc0c8914a577c789582e7629694",
+    "remote_evidence/final_deployment_check.json": "5fca913e93ce8183fe5840703846adcdd08323a8b63f787be0a15d61d58cb68a",
+    "remote_evidence/actual_ssh_inference.json": "d2ffa798805e261be70a5fc51144b0119bfaa1d07d69795937a9571985906c90",
+    "remote_evidence/offline/episode.json": "98f317e0a2ef2430bdefb0cea5e7ea17fc1f0133ea245e6dd1f38a833a970b76",
+    "remote_evidence/offline/anygrasp.json": "3dcd68a9e57b20952ec7a2c2e2b50e68355327e68942648f7bd064040a1f111d",
+    "remote_evidence/offline/ssh_config": "b836c6c0a813b17f4f317671c5b15afeb503cd3fdd74a8170da8df816ece83ac",
+    "evidence/ssh_setup.json": "8f2d193e50f2a3079f1f28687caa70124077f9561dfebb291b839691818b822e",
+    "evidence/final_local_check.json": "6915d9bb4092c1f510061cbd2e4327db24294bccf9b4aed911c412b263d3bc72",
+    "evidence/client_identity.pub": "d798e9ae2df9c63c2257cfaa518a4e7fc96808116d962dab848088b269705f9b",
+    "evidence/deployment_sources.json": "4da95c5819fb089a50d47e9d005c9d7b165da067e34e7920d3df9ca61f9db7d4"
+  }
+}

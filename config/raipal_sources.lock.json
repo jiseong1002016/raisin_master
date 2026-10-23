@@ -1,6 +1,6 @@
 {
   "schema": "raipal_episode_source_pins_v1",
-  "date": "2026-10-23",
+  "date": "2026-10-24",
   "root_repository": {
     "fetch_url": "https://github.com/jiseong1002016/raisin_master.git",
     "upstream_url": "https://github.com/raionrobotics/raisin_master.git",
@@ -39,8 +39,8 @@
     {
       "path": "src/raipal_controller",
       "fetch_url": "https://github.com/jiseong1002016/raipal_controller.git",
-      "revision": "1fa306620383d05fffa951a5c5c91caedb9be8e2",
-      "ref": "feat/grasp-preparation-gate-20261023",
+      "revision": "edc50a7110a96cc593d34bee9ce882c7f7d4d757",
+      "ref": "feat/anygrasp-ssh-20261024",
       "upstream_url": "https://github.com/railabatkaist/raipal_controller.git",
       "fallback_reason": "upstream readable, account has no push permission"
     },
@@ -102,8 +102,8 @@
     {
       "path": "grasp_iteration",
       "fetch_url": "https://github.com/jiseong1002016/grasp_iteration.git",
-      "revision": "b61960daec7b479a55a4922c20b218b68853232c",
-      "ref": "feat/grasp-episode-completion-20261023"
+      "revision": "5906718a42187f319890e1832024fe85eab29aa6",
+      "ref": "feat/anygrasp-ssh-20261024"
     }
   ],
   "legacy_railab_observation": {
