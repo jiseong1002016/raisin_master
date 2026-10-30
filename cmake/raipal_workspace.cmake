@@ -98,7 +98,7 @@ endforeach()
 
 set(RAISIN_DONGDRIVE_CONFIG_DIR "${CMAKE_SOURCE_DIR}/src/raisin_dongdrive/config")
 option(EE_BUILD_INTEGRATION_TESTS "Build the no-hardware EE plugin integration check" ON)
-add_subdirectory(src/raisin_plugin/ee/test)
+add_subdirectory(src/plugins/ee/test)
 if(BUILD_TESTING)
     add_executable(raisin_installed_directory_test
         src/raisin/raisin_util/test/installed_directory_test.cpp)

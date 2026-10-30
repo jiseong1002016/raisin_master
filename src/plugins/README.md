@@ -24,14 +24,14 @@ as a second workspace package.
 Run the resource-generation regression without a robot:
 
 ```bash
-python3 src/raisin_plugin/ee/raisin_raipal_ee/test/passive_visual_generator_test.py
+python3 src/plugins/ee/raisin_raipal_ee/test/passive_visual_generator_test.py
 ```
 
 From the workspace root, the dependency-free maintenance check is:
 
 ```bash
 c++ -std=c++20 -UNDEBUG -Isrc/raisin_raipal/src/raisin_raipal \
-  src/raisin_plugin/ee/test/ee_maintenance_sequence_test.cpp \
+  src/plugins/ee/test/ee_maintenance_sequence_test.cpp \
   -o /tmp/ee_maintenance_sequence_test
 /tmp/ee_maintenance_sequence_test
 ```

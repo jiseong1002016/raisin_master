@@ -1,0 +1,7 @@
+# MOTIE workspace source plugin container; do not replace with generated metadata.
+version: 0.1.0
+dependencies:
+  - raisin>=0.3.0
+  - raisin_gui>=0.1.1
+  - raisin_third_party_common>=0.0.2
+  - raisin_third_party_robot>=0.1.0
