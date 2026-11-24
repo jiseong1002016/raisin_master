@@ -23,6 +23,7 @@ from typing import List, Dict, Set, Optional
 from commands.repo_dependency_check import guard_src_repo_release_yaml_dependencies
 from commands.sdk_target_config import TargetConfig, TargetConfigError
 from commands.git_commands import find_repos_with_lfs_pointers
+from commands.workspace_raisim import select_sdk, verify_binary_abi
 from raisin_ota import runtime_prefix
 from raisin_ota.client import OtaContext
 
@@ -1577,6 +1578,7 @@ def build_pure_cmake_projects(
     repos_to_ignore=None,
     force_rebuild=False,
     raisin_march: Optional[str] = None,
+    raisim_sdk: Optional[Path] = None,
 ):
     """
     Build pure CMake projects in one configuration and install them to install_dir.
@@ -1606,6 +1608,7 @@ def build_pure_cmake_projects(
 
     cache = {} if force_rebuild else _load_build_cache()
     built = set()
+    sdk_target = str(raisim_sdk.resolve(strict=True)) if raisim_sdk is not None else ""
 
     # Exactly one configuration: install_prefix has no build-type component, so building
     # both in one run has the second overwrite the first. Release by default;
@@ -1634,6 +1637,11 @@ def build_pure_cmake_projects(
             cache_key = f"{project_name}_{build_type_token}"
             source_hash = _compute_source_hash(source_dir)
             normalized_cmake_args = [str(arg) for arg in (cmake_args or [])]
+            if raisim_sdk is not None:
+                normalized_cmake_args.extend([
+                    f"-Draisim_DIR={raisim_sdk}/raisim/lib/cmake/raisim",
+                    f"-Drayrai_DIR={raisim_sdk}/rayrai/lib/cmake/rayrai",
+                ])
 
             # Check cache - skip if unchanged
             cached = cache.get(cache_key, {})
@@ -1642,6 +1650,7 @@ def build_pure_cmake_projects(
                 and cached.get("prefix") == str(install_prefix)
                 and cached.get("cmake_args", []) == normalized_cmake_args
                 and cached.get("raisin_march") == (raisin_march or "")
+                and cached.get("raisim_sdk_target", "") == sdk_target
                 and _has_project_cmake_config(install_prefix, project_name)
             ):
                 print(f"  -> {project_name} [{cmake_build_type}] (unchanged, skipping)")
@@ -1661,7 +1670,7 @@ def build_pure_cmake_projects(
                     install_prefix,
                     vcpkg_parent,
                     vcpkg_installed,
-                    extra_cmake_args=cmake_args,
+                    extra_cmake_args=normalized_cmake_args,
                     raisin_march=raisin_march,
                 )
                 cache[cache_key] = {
@@ -1669,6 +1678,7 @@ def build_pure_cmake_projects(
                     "prefix": str(install_prefix),
                     "cmake_args": normalized_cmake_args,
                     "raisin_march": raisin_march or "",
+                    "raisim_sdk_target": sdk_target,
                 }
                 built.add(project_name)
             except subprocess.CalledProcessError as e:
@@ -2185,6 +2195,23 @@ def setup(
 
     packages_to_ignore = get_packages_to_ignore()
     repos_to_ignore = get_repos_to_ignore()
+    raisim_sdk = None
+    workspace = Path(g.script_directory)
+    if (not cross and not package_name and platform.system() == "Linux"
+            and (workspace / "src/raisin_raipal/CMakeLists.txt").is_file()):
+        context = OtaContext(workspace, g.os_type, g.os_version, g.architecture)
+        delivered = runtime_prefix.delivered_package_directories(
+            context, _packages_built_from_src(workspace, set(repos_to_ignore)),
+        )
+        try:
+            link, version = select_sdk(Path.home())
+            verify_binary_abi(delivered or [workspace / "install"], version)
+            for _, project, _, _ in _discover_pure_cmake_projects(package_name, packages_to_ignore, repos_to_ignore):
+                if project in {"raisim", "rayrai"}:
+                    raise ValueError(f"disable the bundled {project} source build to use {link}")
+            raisim_sdk = link
+        except (ValueError, OSError, subprocess.CalledProcessError) as error:
+            raise click.ClickException(str(error)) from error
     if cross:
         source_packages, interface_sources = resolve_sdk_dependencies(
             target, packages_to_ignore, repos_to_ignore
@@ -2214,6 +2241,7 @@ def setup(
             packages_to_ignore,
             repos_to_ignore,
             raisin_march=raisin_march,
+            raisim_sdk=raisim_sdk,
         )
         if pure_cmake_built:
             packages_to_ignore = list(

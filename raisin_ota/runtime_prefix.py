@@ -53,6 +53,23 @@ class RuntimePrefixError(ValueError):
         super().__init__("runtime_prefix_unverified:" + self.reason_code)
 
 
+def delivered_package_directories(context: OtaContext, skip: Collection[str] = ()):
+    pattern = os.path.join(
+        context.workspace,
+        "release",
+        "install",
+        "*",
+        context.os_type,
+        context.os_version,
+        context.architecture,
+        "*",
+    )
+    return [
+        path for path in map(Path, glob.glob(pattern))
+        if path.is_dir() and path.parents[3].name not in skip
+    ]
+
+
 def deploy_packages(
     context: OtaContext, prefix: Path, skip: Collection[str] = ()
 ) -> List[Path]:
@@ -67,26 +84,9 @@ def deploy_packages(
     Returns:
         The package directories copied, in the order they were copied.
     """
-    pattern = os.path.join(
-        context.workspace,
-        "release",
-        "install",
-        "*",
-        context.os_type,
-        context.os_version,
-        context.architecture,
-        "*",
-    )
-    deployed = []
-    for source in glob.glob(pattern):
-        source = Path(source)
-        if not source.is_dir():
-            continue
-        # .../install/<package>/<os>/<os_version>/<arch>/<build_type>
-        if source.parents[3].name in skip:
-            continue
+    deployed = delivered_package_directories(context, skip)
+    for source in deployed:
         shutil.copytree(source, prefix, dirs_exist_ok=True)
-        deployed.append(source)
 
     _make_executable(prefix / "bin")
     return deployed
