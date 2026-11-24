@@ -1,3 +1,8 @@
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING
+        AND EXISTS "${CMAKE_SOURCE_DIR}/src/raisin_raipal/CMakeLists.txt")
+    include("${CMAKE_CURRENT_LIST_DIR}/raipal_workspace_raisim.cmake")
+endif()
+
 function(raisin_find_package package_name)
     if(NOT TARGET ${package_name})
         find_package(${package_name} ${ARGN})

@@ -29,10 +29,6 @@ endif()
 include(@@SCRIPT_DIR@@/cmake/raisin_helper.cmake)
 
 set(CMAKE_PREFIX_PATH "@@SCRIPT_DIR@@/install;${CMAKE_PREFIX_PATH}" CACHE PATH "Search paths for CMake packages")
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING
-        AND EXISTS "@@SCRIPT_DIR@@/src/raisin_raipal/CMakeLists.txt")
-    include("@@SCRIPT_DIR@@/cmake/raipal_workspace_raisim.cmake")
-endif()
 set(RAISIN_MASTER_INCLUDE @@SCRIPT_DIR@@/generated/include CACHE STRING "include path")
 set(CMAKE_DEBUG_POSTFIX "_debug_build" CACHE STRING "Debug Postfix for lib, samples and tools")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

@@ -13,6 +13,6 @@ endif()
 
 set(raisim_DIR "${_raipal_raisim_root}/raisim/lib/cmake/raisim" CACHE PATH "Workspace RaiSim" FORCE)
 set(rayrai_DIR "${_raipal_raisim_root}/rayrai/lib/cmake/rayrai" CACHE PATH "Workspace rayrai" FORCE)
-set(CMAKE_PREFIX_PATH "${_raipal_raisim_root}/raisim;${_raipal_raisim_root}/rayrai;${_raipal_raisim_root}/thirdParty/Eigen3;${CMAKE_PREFIX_PATH}")
+set(CMAKE_PREFIX_PATH "${_raipal_raisim_root}/raisim;${_raipal_raisim_root}/rayrai;${_raipal_raisim_root}/thirdParty/Eigen3;${CMAKE_SOURCE_DIR}/install;${CMAKE_PREFIX_PATH}")
 find_package(raisim CONFIG REQUIRED PATHS "${raisim_DIR}" NO_DEFAULT_PATH)
 message(STATUS "RAIPAL workspace RaiSim SDK: ${_raipal_raisim_root}")
