@@ -2204,7 +2204,7 @@ def setup(
             context, _packages_built_from_src(workspace, set(repos_to_ignore)),
         )
         try:
-            link, version = select_sdk(Path.home())
+            link, version = select_sdk(Path.home(), delivered or [workspace / "install"])
             verify_binary_abi(delivered or [workspace / "install"], version)
             for _, project, _, _ in _discover_pure_cmake_projects(package_name, packages_to_ignore, repos_to_ignore):
                 if project in {"raisim", "rayrai"}:

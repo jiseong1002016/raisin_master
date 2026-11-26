@@ -256,12 +256,12 @@ raisin setup raisin_network
 
 ### 8. Build the Project
 
-Linux RAIPAL workspaces use `~/raisim_ws/raisim2Lib` for RaiSim and rayrai.
-Create it as a symlink to a versioned sibling directory such as
-`~/raisim_ws/raisim2.17.0`. Both setup and CMake use that selection.
-Setup checks the delivered binary dependencies before recreating the install
-prefix. If a Raisin package needs a different RaiSim ABI, supply a compatible
-binary release before building.
+Linux RAIPAL workspaces build against the RaiSim version that the delivered
+(OTA) Raisin binaries link, taken from `~/raisim_ws/raisim<VERSION>` (for example
+`~/raisim_ws/raisim2.10.2`). `~/raisim_ws/raisim2Lib` stays the machine default
+(a symlink to a versioned sibling such as `~/raisim_ws/raisim2.17.0`) and is used
+only when no delivered binary links RaiSim yet. Setup and CMake use the same
+selection and refuse delivered binaries that need different RaiSim versions.
 
 Use the `build` command to compile the project. You must specify the build type using `--type` (or `-t`).
 
